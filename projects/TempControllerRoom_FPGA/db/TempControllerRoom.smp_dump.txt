@@ -1,0 +1,7 @@
+
+State Machine - |TempControllerRoom|SAR:ADC0|curr_state
+Name curr_state.done curr_state.confirm_bit curr_state.try_1 curr_state.wait_soc 
+curr_state.wait_soc 0 0 0 0 
+curr_state.try_1 0 0 1 1 
+curr_state.confirm_bit 0 1 0 1 
+curr_state.done 1 0 0 1 

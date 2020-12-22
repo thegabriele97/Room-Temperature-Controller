@@ -1,0 +1,22 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity TempControllerRoom is
+	port(
+		clk_in			: in std_logic;
+		rst_n				: in std_logic;
+		
+		--ADC/SAR Converter
+		soc				: in std_logic;
+		DAC_data			: out std_logic_vector(6 downto 0)
+	);
+end entity;
+
+architecture mixture of TempControllerRoom is
+
+	
+
+begin
+
+end mixture;

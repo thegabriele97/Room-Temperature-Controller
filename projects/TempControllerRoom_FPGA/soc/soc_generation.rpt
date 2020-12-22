@@ -1,0 +1,35 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc.qsys --block-symbol-file --output-directory=C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc --family="Cyclone IV E" --part=EP4CE6E22C8
+Progress: Loading TempControllerRoom_FPGA/soc.qsys
+Progress: Reading input file
+Progress: Adding altpll_0 [altpll 20.1]
+Progress: Parameterizing module altpll_0
+Progress: Adding clk_0 [clock_source 20.1]
+Progress: Parameterizing module clk_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Warning: soc.altpll_0: altpll_0.pll_slave must be connected to an Avalon-MM master
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc.qsys --synthesis=VHDL --output-directory=C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc\synthesis --family="Cyclone IV E" --part=EP4CE6E22C8
+Progress: Loading TempControllerRoom_FPGA/soc.qsys
+Progress: Reading input file
+Progress: Adding altpll_0 [altpll 20.1]
+Progress: Parameterizing module altpll_0
+Progress: Adding clk_0 [clock_source 20.1]
+Progress: Parameterizing module clk_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Warning: soc.altpll_0: altpll_0.pll_slave must be connected to an Avalon-MM master
+Info: soc: Generating soc "soc" for QUARTUS_SYNTH
+Info: altpll_0: "soc" instantiated altpll "altpll_0"
+Info: rst_controller: "soc" instantiated altera_reset_controller "rst_controller"
+Info: soc: Done "soc" with 3 modules, 5 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

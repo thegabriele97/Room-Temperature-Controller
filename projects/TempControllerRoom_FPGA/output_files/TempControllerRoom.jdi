@@ -1,0 +1,16 @@
+<sld_project_info>
+  <project>
+    <hash md5_digest_80b="b066b4c9731452580c8a"/>
+  </project>
+  <file_info>
+    <file device="EP4CE6E22C8" path="TempControllerRoom.sof" usercode="0xFFFFFFFF"/>
+  </file_info>
+  <sld_infos>
+    <sld_info hpath="soc:u0" name="u0">
+      <assignment_values>
+        <assignment_value text="QSYS_NAME soc HAS_SOPCINFO 1 GENERATION_ID 1608654432"/>
+      </assignment_values>
+      <parameters/>
+    </sld_info>
+  </sld_infos>
+</sld_project_info>

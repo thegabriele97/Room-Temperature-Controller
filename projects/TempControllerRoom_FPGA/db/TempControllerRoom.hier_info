@@ -1,0 +1,301 @@
+|TempControllerRoom
+clk_in => soc:u0.clk_clk
+rst_n => soc:u0.reset_reset_n
+rst_n => SAR:ADC0.rst
+rst_n => curr_cnt[0].ACLR
+rst_n => curr_cnt[1].ACLR
+rst_n => curr_cnt[2].ACLR
+rst_n => curr_cnt[3].ACLR
+rst_n => curr_cnt[4].ACLR
+rst_n => curr_cnt[5].ACLR
+rst_n => curr_cnt[6].ACLR
+rst_n => curr_cnt[7].ACLR
+rst_n => curr_cnt[8].ACLR
+rst_n => curr_cnt[9].ACLR
+rst_n => curr_cnt[10].ACLR
+rst_n => curr_cnt[11].ACLR
+rst_n => curr_cnt[12].ACLR
+rst_n => curr_cnt[13].ACLR
+rst_n => curr_cnt[14].ACLR
+rst_n => curr_cnt[15].ACLR
+rst_n => curr_cnt[16].ACLR
+rst_n => curr_cnt[17].ACLR
+rst_n => curr_cnt[18].ACLR
+rst_n => curr_cnt[19].ACLR
+rst_n => curr_cnt[20].ACLR
+rst_n => curr_cnt[21].ACLR
+rst_n => curr_cnt[22].ACLR
+rst_n => curr_cnt[23].ACLR
+rst_n => curr_cnt[24].ACLR
+rst_n => curr_cnt[25].ACLR
+rst_n => curr_cnt[26].ACLR
+rst_n => curr_cnt[27].ACLR
+rst_n => curr_cnt[28].ACLR
+rst_n => curr_cnt[29].ACLR
+rst_n => curr_cnt[30].ACLR
+rst_n => curr_cnt[31].ACLR
+beep <= Equal0.DB_MAX_OUTPUT_PORT_TYPE
+soc_n => SAR:ADC0.soc
+comp_in => SAR:ADC0.comp_in
+DAC_data[0] <= SAR:ADC0.DAC_data[0]
+DAC_data[1] <= SAR:ADC0.DAC_data[1]
+DAC_data[2] <= SAR:ADC0.DAC_data[2]
+DAC_data[3] <= SAR:ADC0.DAC_data[3]
+DAC_data[4] <= SAR:ADC0.DAC_data[4]
+DAC_data[5] <= SAR:ADC0.DAC_data[5]
+DAC_data[6] <= SAR:ADC0.DAC_data[6]
+
+
+|TempControllerRoom|soc:u0
+altpll_0_c0_clk <= soc_altpll_0:altpll_0.c0
+clk_clk => soc_altpll_0:altpll_0.clk
+clk_clk => altera_reset_controller:rst_controller.clk
+reset_reset_n => altera_reset_controller:rst_controller.reset_in0
+
+
+|TempControllerRoom|soc:u0|soc_altpll_0:altpll_0
+address[0] => w_select_control.IN0
+address[0] => w_select_status.IN0
+address[1] => w_select_status.IN1
+address[1] => w_select_control.IN1
+areset => comb.IN1
+c0 <= soc_altpll_0_altpll_l942:sd1.clk
+clk => clk.IN2
+configupdate => ~NO_FANOUT~
+locked <= wire_sd1_locked.DB_MAX_OUTPUT_PORT_TYPE
+phasecounterselect[0] => ~NO_FANOUT~
+phasecounterselect[1] => ~NO_FANOUT~
+phasecounterselect[2] => ~NO_FANOUT~
+phasecounterselect[3] => ~NO_FANOUT~
+phasedone <= <GND>
+phasestep => ~NO_FANOUT~
+phaseupdown => ~NO_FANOUT~
+read => readdata.IN1
+read => readdata.IN1
+readdata[0] <= readdata.DB_MAX_OUTPUT_PORT_TYPE
+readdata[1] <= readdata.DB_MAX_OUTPUT_PORT_TYPE
+readdata[2] <= <GND>
+readdata[3] <= <GND>
+readdata[4] <= <GND>
+readdata[5] <= <GND>
+readdata[6] <= <GND>
+readdata[7] <= <GND>
+readdata[8] <= <GND>
+readdata[9] <= <GND>
+readdata[10] <= <GND>
+readdata[11] <= <GND>
+readdata[12] <= <GND>
+readdata[13] <= <GND>
+readdata[14] <= <GND>
+readdata[15] <= <GND>
+readdata[16] <= <GND>
+readdata[17] <= <GND>
+readdata[18] <= <GND>
+readdata[19] <= <GND>
+readdata[20] <= <GND>
+readdata[21] <= <GND>
+readdata[22] <= <GND>
+readdata[23] <= <GND>
+readdata[24] <= <GND>
+readdata[25] <= <GND>
+readdata[26] <= <GND>
+readdata[27] <= <GND>
+readdata[28] <= <GND>
+readdata[29] <= <GND>
+readdata[30] <= <GND>
+readdata[31] <= <GND>
+reset => prev_reset.ACLR
+reset => pfdena_reg.PRESET
+reset => _.IN1
+scanclk => ~NO_FANOUT~
+scanclkena => ~NO_FANOUT~
+scandata => ~NO_FANOUT~
+scandataout <= <GND>
+scandone <= <GND>
+write => wire_pfdena_reg_ena.IN1
+writedata[0] => w_reset.IN1
+writedata[1] => pfdena_reg.DATAIN
+writedata[2] => ~NO_FANOUT~
+writedata[3] => ~NO_FANOUT~
+writedata[4] => ~NO_FANOUT~
+writedata[5] => ~NO_FANOUT~
+writedata[6] => ~NO_FANOUT~
+writedata[7] => ~NO_FANOUT~
+writedata[8] => ~NO_FANOUT~
+writedata[9] => ~NO_FANOUT~
+writedata[10] => ~NO_FANOUT~
+writedata[11] => ~NO_FANOUT~
+writedata[12] => ~NO_FANOUT~
+writedata[13] => ~NO_FANOUT~
+writedata[14] => ~NO_FANOUT~
+writedata[15] => ~NO_FANOUT~
+writedata[16] => ~NO_FANOUT~
+writedata[17] => ~NO_FANOUT~
+writedata[18] => ~NO_FANOUT~
+writedata[19] => ~NO_FANOUT~
+writedata[20] => ~NO_FANOUT~
+writedata[21] => ~NO_FANOUT~
+writedata[22] => ~NO_FANOUT~
+writedata[23] => ~NO_FANOUT~
+writedata[24] => ~NO_FANOUT~
+writedata[25] => ~NO_FANOUT~
+writedata[26] => ~NO_FANOUT~
+writedata[27] => ~NO_FANOUT~
+writedata[28] => ~NO_FANOUT~
+writedata[29] => ~NO_FANOUT~
+writedata[30] => ~NO_FANOUT~
+writedata[31] => ~NO_FANOUT~
+
+
+|TempControllerRoom|soc:u0|soc_altpll_0:altpll_0|soc_altpll_0_stdsync_sv6:stdsync2
+clk => clk.IN1
+din => din.IN1
+dout <= soc_altpll_0_dffpipe_l2c:dffpipe3.q
+reset_n => reset_n.IN1
+
+
+|TempControllerRoom|soc:u0|soc_altpll_0:altpll_0|soc_altpll_0_stdsync_sv6:stdsync2|soc_altpll_0_dffpipe_l2c:dffpipe3
+clock => dffe6a[0].CLK
+clock => dffe5a[0].CLK
+clock => dffe4a[0].CLK
+clrn => dffe6a[0].ACLR
+clrn => dffe4a[0].ACLR
+clrn => dffe5a[0].ACLR
+d[0] => dffe4a[0].DATAIN
+q[0] <= dffe6a[0].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|TempControllerRoom|soc:u0|soc_altpll_0:altpll_0|soc_altpll_0_altpll_l942:sd1
+areset => pll_lock_sync.ACLR
+areset => pll7.ARESET
+clk[0] <= pll7.CLK
+clk[1] <= pll7.CLK1
+clk[2] <= pll7.CLK2
+clk[3] <= pll7.CLK3
+clk[4] <= pll7.CLK4
+inclk[0] => pll7.CLK
+inclk[1] => pll7.CLK1
+locked <= locked.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|TempControllerRoom|soc:u0|altera_reset_controller:rst_controller
+reset_in0 => merged_reset.IN0
+reset_in1 => merged_reset.IN1
+reset_in2 => merged_reset.IN1
+reset_in3 => merged_reset.IN1
+reset_in4 => merged_reset.IN1
+reset_in5 => merged_reset.IN1
+reset_in6 => merged_reset.IN1
+reset_in7 => merged_reset.IN1
+reset_in8 => merged_reset.IN1
+reset_in9 => merged_reset.IN1
+reset_in10 => merged_reset.IN1
+reset_in11 => merged_reset.IN1
+reset_in12 => merged_reset.IN1
+reset_in13 => merged_reset.IN1
+reset_in14 => merged_reset.IN1
+reset_in15 => merged_reset.IN1
+reset_req_in0 => ~NO_FANOUT~
+reset_req_in1 => ~NO_FANOUT~
+reset_req_in2 => ~NO_FANOUT~
+reset_req_in3 => ~NO_FANOUT~
+reset_req_in4 => ~NO_FANOUT~
+reset_req_in5 => ~NO_FANOUT~
+reset_req_in6 => ~NO_FANOUT~
+reset_req_in7 => ~NO_FANOUT~
+reset_req_in8 => ~NO_FANOUT~
+reset_req_in9 => ~NO_FANOUT~
+reset_req_in10 => ~NO_FANOUT~
+reset_req_in11 => ~NO_FANOUT~
+reset_req_in12 => ~NO_FANOUT~
+reset_req_in13 => ~NO_FANOUT~
+reset_req_in14 => ~NO_FANOUT~
+reset_req_in15 => ~NO_FANOUT~
+clk => clk.IN2
+reset_out <= altera_reset_synchronizer:alt_rst_sync_uq1.reset_out
+reset_req <= altera_reset_synchronizer:alt_rst_req_sync_uq1.reset_out
+
+
+|TempControllerRoom|soc:u0|altera_reset_controller:rst_controller|altera_reset_synchronizer:alt_rst_sync_uq1
+reset_in => altera_reset_synchronizer_int_chain_out.PRESET
+reset_in => altera_reset_synchronizer_int_chain[0].PRESET
+reset_in => altera_reset_synchronizer_int_chain[1].PRESET
+clk => altera_reset_synchronizer_int_chain_out.CLK
+clk => altera_reset_synchronizer_int_chain[0].CLK
+clk => altera_reset_synchronizer_int_chain[1].CLK
+reset_out <= altera_reset_synchronizer_int_chain_out.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|TempControllerRoom|soc:u0|altera_reset_controller:rst_controller|altera_reset_synchronizer:alt_rst_req_sync_uq1
+reset_in => altera_reset_synchronizer_int_chain[1].DATAIN
+clk => altera_reset_synchronizer_int_chain_out.CLK
+clk => altera_reset_synchronizer_int_chain[0].CLK
+clk => altera_reset_synchronizer_int_chain[1].CLK
+reset_out <= altera_reset_synchronizer_int_chain_out.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|TempControllerRoom|SAR:ADC0
+clk => curr_iter[0].CLK
+clk => curr_iter[1].CLK
+clk => curr_iter[2].CLK
+clk => curr_conv[0].CLK
+clk => curr_conv[1].CLK
+clk => curr_conv[2].CLK
+clk => curr_conv[3].CLK
+clk => curr_conv[4].CLK
+clk => curr_conv[5].CLK
+clk => curr_conv[6].CLK
+clk => curr_dac[0].CLK
+clk => curr_dac[1].CLK
+clk => curr_dac[2].CLK
+clk => curr_dac[3].CLK
+clk => curr_dac[4].CLK
+clk => curr_dac[5].CLK
+clk => curr_dac[6].CLK
+clk => curr_state~1.DATAIN
+rst => curr_iter[0].ACLR
+rst => curr_iter[1].ACLR
+rst => curr_iter[2].ACLR
+rst => curr_conv[0].ACLR
+rst => curr_conv[1].ACLR
+rst => curr_conv[2].ACLR
+rst => curr_conv[3].ACLR
+rst => curr_conv[4].ACLR
+rst => curr_conv[5].ACLR
+rst => curr_conv[6].ACLR
+rst => curr_dac[0].ACLR
+rst => curr_dac[1].ACLR
+rst => curr_dac[2].ACLR
+rst => curr_dac[3].ACLR
+rst => curr_dac[4].ACLR
+rst => curr_dac[5].ACLR
+rst => curr_dac[6].ACLR
+rst => curr_state~3.DATAIN
+soc => next_state.OUTPUTSELECT
+soc => next_state.OUTPUTSELECT
+soc => next_state.OUTPUTSELECT
+soc => next_state.OUTPUTSELECT
+eoc <= eoc.DB_MAX_OUTPUT_PORT_TYPE
+comp_in => next_dac.DATAB
+comp_in => next_dac.DATAB
+comp_in => next_dac.DATAB
+comp_in => next_dac.DATAB
+comp_in => next_dac.DATAB
+comp_in => next_dac.DATAB
+comp_in => next_dac.DATAB
+data[0] <= curr_conv[0].DB_MAX_OUTPUT_PORT_TYPE
+data[1] <= curr_conv[1].DB_MAX_OUTPUT_PORT_TYPE
+data[2] <= curr_conv[2].DB_MAX_OUTPUT_PORT_TYPE
+data[3] <= curr_conv[3].DB_MAX_OUTPUT_PORT_TYPE
+data[4] <= curr_conv[4].DB_MAX_OUTPUT_PORT_TYPE
+data[5] <= curr_conv[5].DB_MAX_OUTPUT_PORT_TYPE
+data[6] <= curr_conv[6].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[0] <= curr_dac[0].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[1] <= curr_dac[1].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[2] <= curr_dac[2].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[3] <= curr_dac[3].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[4] <= curr_dac[4].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[5] <= curr_dac[5].DB_MAX_OUTPUT_PORT_TYPE
+DAC_data[6] <= curr_dac[6].DB_MAX_OUTPUT_PORT_TYPE
+
+

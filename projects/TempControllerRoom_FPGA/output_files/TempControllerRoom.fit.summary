@@ -1,0 +1,16 @@
+Fitter Status : Successful - Tue Dec 22 17:27:26 2020
+Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Revision Name : TempControllerRoom
+Top-level Entity Name : TempControllerRoom
+Family : Cyclone IV E
+Device : EP4CE6E22C8
+Timing Models : Final
+Total logic elements : 74 / 6,272 ( 1 % )
+    Total combinational functions : 74 / 6,272 ( 1 % )
+    Dedicated logic registers : 46 / 6,272 ( < 1 % )
+Total registers : 46
+Total pins : 12 / 92 ( 13 % )
+Total virtual pins : 0
+Total memory bits : 0 / 276,480 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 30 ( 0 % )
+Total PLLs : 1 / 2 ( 50 % )
