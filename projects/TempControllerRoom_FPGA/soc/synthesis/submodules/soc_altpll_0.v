@@ -1,4 +1,4 @@
-//altpll_avalon avalon_use_separate_sysclk="NO" CBX_SINGLE_OUTPUT_FILE="ON" CBX_SUBMODULE_USED_PORTS="altpll:areset,clk,locked,inclk" address areset c0 clk configupdate locked phasecounterselect phasedone phasestep phaseupdown read readdata reset scanclk scanclkena scandata scandataout scandone write writedata bandwidth_type="AUTO" clk0_divide_by=10000 clk0_duty_cycle=50 clk0_multiply_by=1 clk0_phase_shift="0" compensate_clock="CLK0" device_family="CYCLONEIVE" inclk0_input_frequency=20000 intended_device_family="Cyclone IV E" operation_mode="normal" pll_type="AUTO" port_clk0="PORT_USED" port_clk1="PORT_UNUSED" port_clk2="PORT_UNUSED" port_clk3="PORT_UNUSED" port_clk4="PORT_UNUSED" port_clk5="PORT_UNUSED" port_extclk0="PORT_UNUSED" port_extclk1="PORT_UNUSED" port_extclk2="PORT_UNUSED" port_extclk3="PORT_UNUSED" port_inclk1="PORT_UNUSED" port_phasecounterselect="PORT_UNUSED" port_phasedone="PORT_UNUSED" port_scandata="PORT_UNUSED" port_scandataout="PORT_UNUSED" width_clock=5
+//altpll_avalon avalon_use_separate_sysclk="NO" CBX_SINGLE_OUTPUT_FILE="ON" CBX_SUBMODULE_USED_PORTS="altpll:areset,clk,locked,inclk" address areset c0 c1 c2 clk configupdate locked phasecounterselect phasedone phasestep phaseupdown read readdata reset scanclk scanclkena scandata scandataout scandone write writedata bandwidth_type="AUTO" clk0_divide_by=10000 clk0_duty_cycle=50 clk0_multiply_by=1 clk0_phase_shift="0" clk1_divide_by=1 clk1_duty_cycle=50 clk1_multiply_by=1 clk1_phase_shift="0" clk2_divide_by=1 clk2_duty_cycle=50 clk2_multiply_by=1 clk2_phase_shift="-3556" compensate_clock="CLK0" device_family="CYCLONEIVE" inclk0_input_frequency=20000 intended_device_family="Cyclone IV E" operation_mode="normal" pll_type="AUTO" port_clk0="PORT_USED" port_clk1="PORT_USED" port_clk2="PORT_USED" port_clk3="PORT_UNUSED" port_clk4="PORT_UNUSED" port_clk5="PORT_UNUSED" port_extclk0="PORT_UNUSED" port_extclk1="PORT_UNUSED" port_extclk2="PORT_UNUSED" port_extclk3="PORT_UNUSED" port_inclk1="PORT_UNUSED" port_phasecounterselect="PORT_UNUSED" port_phasedone="PORT_UNUSED" port_scandata="PORT_UNUSED" port_scandataout="PORT_UNUSED" width_clock=5
 //VERSION_BEGIN 20.1 cbx_altclkbuf 2020:11:11:17:06:45:SJ cbx_altiobuf_bidir 2020:11:11:17:06:45:SJ cbx_altiobuf_in 2020:11:11:17:06:45:SJ cbx_altiobuf_out 2020:11:11:17:06:45:SJ cbx_altpll 2020:11:11:17:06:45:SJ cbx_altpll_avalon 2020:11:11:17:06:45:SJ cbx_cycloneii 2020:11:11:17:06:45:SJ cbx_lpm_add_sub 2020:11:11:17:06:45:SJ cbx_lpm_compare 2020:11:11:17:06:45:SJ cbx_lpm_counter 2020:11:11:17:06:45:SJ cbx_lpm_decode 2020:11:11:17:06:45:SJ cbx_lpm_mux 2020:11:11:17:06:45:SJ cbx_lpm_shiftreg 2020:11:11:17:06:45:SJ cbx_mgl 2020:11:11:17:08:38:SJ cbx_nadder 2020:11:11:17:06:46:SJ cbx_stratix 2020:11:11:17:06:46:SJ cbx_stratixii 2020:11:11:17:06:46:SJ cbx_stratixiii 2020:11:11:17:06:46:SJ cbx_stratixv 2020:11:11:17:06:46:SJ cbx_util_mgl 2020:11:11:17:06:46:SJ  VERSION_END
 // synthesis VERILOG_INPUT_VERSION VERILOG_2001
 // altera message_off 10463
@@ -120,7 +120,7 @@ module  soc_altpll_0_stdsync_sv6
 endmodule //soc_altpll_0_stdsync_sv6
 
 
-//altpll bandwidth_type="AUTO" CBX_SINGLE_OUTPUT_FILE="ON" clk0_divide_by=10000 clk0_duty_cycle=50 clk0_multiply_by=1 clk0_phase_shift="0" compensate_clock="CLK0" device_family="CYCLONEIVE" inclk0_input_frequency=20000 intended_device_family="Cyclone IV E" operation_mode="normal" pll_type="AUTO" port_clk0="PORT_USED" port_clk1="PORT_UNUSED" port_clk2="PORT_UNUSED" port_clk3="PORT_UNUSED" port_clk4="PORT_UNUSED" port_clk5="PORT_UNUSED" port_extclk0="PORT_UNUSED" port_extclk1="PORT_UNUSED" port_extclk2="PORT_UNUSED" port_extclk3="PORT_UNUSED" port_inclk1="PORT_UNUSED" port_phasecounterselect="PORT_UNUSED" port_phasedone="PORT_UNUSED" port_scandata="PORT_UNUSED" port_scandataout="PORT_UNUSED" width_clock=5 areset clk inclk locked
+//altpll bandwidth_type="AUTO" CBX_SINGLE_OUTPUT_FILE="ON" clk0_divide_by=10000 clk0_duty_cycle=50 clk0_multiply_by=1 clk0_phase_shift="0" clk1_divide_by=1 clk1_duty_cycle=50 clk1_multiply_by=1 clk1_phase_shift="0" clk2_divide_by=1 clk2_duty_cycle=50 clk2_multiply_by=1 clk2_phase_shift="-3556" compensate_clock="CLK0" device_family="CYCLONEIVE" inclk0_input_frequency=20000 intended_device_family="Cyclone IV E" operation_mode="normal" pll_type="AUTO" port_clk0="PORT_USED" port_clk1="PORT_USED" port_clk2="PORT_USED" port_clk3="PORT_UNUSED" port_clk4="PORT_UNUSED" port_clk5="PORT_UNUSED" port_extclk0="PORT_UNUSED" port_extclk1="PORT_UNUSED" port_extclk2="PORT_UNUSED" port_extclk3="PORT_UNUSED" port_inclk1="PORT_UNUSED" port_phasecounterselect="PORT_UNUSED" port_phasedone="PORT_UNUSED" port_scandata="PORT_UNUSED" port_scandataout="PORT_UNUSED" width_clock=5 areset clk inclk locked
 //VERSION_BEGIN 20.1 cbx_altclkbuf 2020:11:11:17:06:45:SJ cbx_altiobuf_bidir 2020:11:11:17:06:45:SJ cbx_altiobuf_in 2020:11:11:17:06:45:SJ cbx_altiobuf_out 2020:11:11:17:06:45:SJ cbx_altpll 2020:11:11:17:06:45:SJ cbx_cycloneii 2020:11:11:17:06:45:SJ cbx_lpm_add_sub 2020:11:11:17:06:45:SJ cbx_lpm_compare 2020:11:11:17:06:45:SJ cbx_lpm_counter 2020:11:11:17:06:45:SJ cbx_lpm_decode 2020:11:11:17:06:45:SJ cbx_lpm_mux 2020:11:11:17:06:45:SJ cbx_mgl 2020:11:11:17:08:38:SJ cbx_nadder 2020:11:11:17:06:46:SJ cbx_stratix 2020:11:11:17:06:46:SJ cbx_stratixii 2020:11:11:17:06:46:SJ cbx_stratixiii 2020:11:11:17:06:46:SJ cbx_stratixv 2020:11:11:17:06:46:SJ cbx_util_mgl 2020:11:11:17:06:46:SJ  VERSION_END
 
 //synthesis_resources = cycloneive_pll 1 reg 1 
@@ -128,7 +128,7 @@ endmodule //soc_altpll_0_stdsync_sv6
 `timescale 1 ps / 1 ps
 //synopsys translate_on
 (* ALTERA_ATTRIBUTE = {"SUPPRESS_DA_RULE_INTERNAL=C104;SUPPRESS_DA_RULE_INTERNAL=R101"} *)
-module  soc_altpll_0_altpll_l942
+module  soc_altpll_0_altpll_9ih2
 	( 
 	areset,
 	clk,
@@ -197,6 +197,14 @@ module  soc_altpll_0_altpll_l942
 		pll7.clk0_duty_cycle = 50,
 		pll7.clk0_multiply_by = 1,
 		pll7.clk0_phase_shift = "0",
+		pll7.clk1_divide_by = 1,
+		pll7.clk1_duty_cycle = 50,
+		pll7.clk1_multiply_by = 1,
+		pll7.clk1_phase_shift = "0",
+		pll7.clk2_divide_by = 1,
+		pll7.clk2_duty_cycle = 50,
+		pll7.clk2_multiply_by = 1,
+		pll7.clk2_phase_shift = "-3556",
 		pll7.compensate_clock = "clk0",
 		pll7.inclk0_input_frequency = 20000,
 		pll7.operation_mode = "normal",
@@ -205,7 +213,7 @@ module  soc_altpll_0_altpll_l942
 	assign
 		clk = {wire_pll7_clk[4:0]},
 		locked = (wire_pll7_locked & pll_lock_sync);
-endmodule //soc_altpll_0_altpll_l942
+endmodule //soc_altpll_0_altpll_9ih2
 
 //synthesis_resources = cycloneive_pll 1 reg 6 
 //synopsys translate_off
@@ -216,6 +224,8 @@ module  soc_altpll_0
 	address,
 	areset,
 	c0,
+	c1,
+	c2,
 	clk,
 	configupdate,
 	locked,
@@ -236,6 +246,8 @@ module  soc_altpll_0
 	input   [1:0]  address;
 	input   areset;
 	output   c0;
+	output   c1;
+	output   c2;
 	input   clk;
 	input   configupdate;
 	output   locked;
@@ -275,7 +287,7 @@ module  soc_altpll_0
 	.din(wire_sd1_locked),
 	.dout(wire_stdsync2_dout),
 	.reset_n((~ reset)));
-	soc_altpll_0_altpll_l942   sd1
+	soc_altpll_0_altpll_9ih2   sd1
 	( 
 	.areset((w_pll_areset_in | areset)),
 	.clk(wire_sd1_clk),
@@ -299,6 +311,8 @@ module  soc_altpll_0
 		else  prev_reset <= w_reset;
 	assign
 		c0 = wire_sd1_clk[0],
+		c1 = wire_sd1_clk[1],
+		c2 = wire_sd1_clk[2],
 		locked = wire_sd1_locked,
 		phasedone = 1'b0,
 		readdata = {{30{1'b0}}, (read & ((w_select_control & w_pfdena) | (w_select_status & w_phasedone))), (read & ((w_select_control & w_pll_areset_in) | (w_select_status & w_locked)))},

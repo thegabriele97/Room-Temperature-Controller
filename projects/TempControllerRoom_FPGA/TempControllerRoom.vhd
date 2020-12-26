@@ -4,15 +4,34 @@ use ieee.numeric_std.all;
 
 entity TempControllerRoom is
 	port(
-		clk_in			: in std_logic;
-		rst_n				: in std_logic;
+		clk_in								: in std_logic;
+		rst_n									: in std_logic;
 		
-		beep				: out std_logic;
+		beep									: out std_logic;
 		
 		--ADC/SAR Converter
-		soc_n				: in std_logic;
-		comp_in			: in std_logic;
-		DAC_data			: out std_logic_vector(6 downto 0)
+		comp_in								: in std_logic;
+		DAC_data								: out std_logic_vector(6 downto 0);
+		
+		--SDRAM
+		sdram_clk                 		: out   std_logic;                                        
+		sdram_addr                    : out   std_logic_vector(11 downto 0);
+		sdram_ba                      : out   std_logic_vector(1 downto 0);
+		sdram_cas_n                   : out   std_logic;
+		sdram_cke                     : out   std_logic;
+		sdram_cs_n                    : out   std_logic;
+		sdram_dq                      : inout std_logic_vector(15 downto 0) := (others => 'X');
+		sdram_dqm                     : out   std_logic_vector(1 downto 0);
+		sdram_ras_n                   : out   std_logic;
+		sdram_we_n                    : out   std_logic;
+		
+		--UART0
+		uart0_rx								: in std_logic;
+		uart0_tx								: out std_logic;
+		
+		--Temporary GPIO0
+		gpio0									: inout std_logic_vector(3 downto 0)
+		
 	);
 end entity;
 
@@ -46,52 +65,91 @@ architecture mixture of TempControllerRoom is
 		);
 	end component;
 
-
     component soc is
         port (
-            clk_clk         : in  std_logic := 'X'; -- clk
-            reset_reset_n   : in  std_logic := 'X'; -- reset_n
-            altpll_0_c0_clk : out std_logic         -- clk
-        );
+            pll_5khz_clk                                    : out   std_logic;                                        -- clk
+            clk_clk                                         : in    std_logic                     := 'X';             -- clk
+            sdram_clk_clk                                   : out   std_logic;                                        -- clk
+            core0_cpu_resetrequest_conduit_cpu_resetrequest : in    std_logic                     := 'X';             -- cpu_resetrequest
+            core0_cpu_resetrequest_conduit_cpu_resettaken   : out   std_logic;                                        -- cpu_resettaken
+            sdram_controller_0_wire_addr                    : out   std_logic_vector(11 downto 0);                    -- addr
+            sdram_controller_0_wire_ba                      : out   std_logic_vector(1 downto 0);                     -- ba
+            sdram_controller_0_wire_cas_n                   : out   std_logic;                                        -- cas_n
+            sdram_controller_0_wire_cke                     : out   std_logic;                                        -- cke
+            sdram_controller_0_wire_cs_n                    : out   std_logic;                                        -- cs_n
+            sdram_controller_0_wire_dq                      : inout std_logic_vector(15 downto 0) := (others => 'X'); -- dq
+            sdram_controller_0_wire_dqm                     : out   std_logic_vector(1 downto 0);                     -- dqm
+            sdram_controller_0_wire_ras_n                   : out   std_logic;                                        -- ras_n
+            sdram_controller_0_wire_we_n                    : out   std_logic;                                        -- we_n
+            uart_0_external_connection_rxd                  : in    std_logic                     := 'X';             -- rxd
+            uart_0_external_connection_txd                  : out   std_logic;                                        -- txd
+            gpio_0_external_connection_export               : inout std_logic_vector(3 downto 0)  := (others => 'X'); -- export
+				gpio_1_adc_external_connection_in_port          : in    std_logic_vector(9 downto 0)  := (others => 'X'); -- in_port
+            gpio_1_adc_external_connection_out_port         : out   std_logic_vector(9 downto 0)                      -- out_port
+		  );
     end component soc;
 
-
+	for ADC0: SAR use entity work.SAR(hlsm2);
+	
+	 
 	signal clk_1hz, clk_5khz: std_logic;
 	signal rst: std_logic;
-	signal soc_s: std_logic;
 	
-	signal trash: std_logic;
-	signal trash_enl: std_logic_vector(6 downto 0);
+	signal igpio0: std_logic_vector(3 downto 0);
+	signal igpio1_adc_in, igpio1_adc_out: std_logic_vector(9 downto 0);		-- 	 0: soc
+																									-- 	 1: eoc
+																									-- 	 2: reserved
+																									-- [3-9]: ADC data
 	
 	signal curr_cnt, next_cnt: std_logic_vector(31 downto 0);
 	
 begin
 
-	u0 : component soc
-	  port map (
-			clk_clk         => clk_in,         --         clk.clk
-			reset_reset_n   => rst_n,   --       reset.reset_n
-			altpll_0_c0_clk => clk_5khz  -- altpll_0_c0.clk
-	  );
+    u0 : component soc
+        port map (
+            pll_5khz_clk                                    => clk_5khz,
+            clk_clk                                         => clk_in,
+            sdram_clk_clk                                   => sdram_clk,
+            
+				core0_cpu_resetrequest_conduit_cpu_resetrequest => rst,
+            core0_cpu_resetrequest_conduit_cpu_resettaken   => beep,
+            
+				sdram_controller_0_wire_addr                    => sdram_addr,
+            sdram_controller_0_wire_ba                      => sdram_ba,
+            sdram_controller_0_wire_cas_n                   => sdram_cas_n,
+            sdram_controller_0_wire_cke                     => sdram_cke,
+            sdram_controller_0_wire_cs_n                    => sdram_cs_n,
+            sdram_controller_0_wire_dq                      => sdram_dq,
+            sdram_controller_0_wire_dqm                     => sdram_dqm,
+            sdram_controller_0_wire_ras_n                   => sdram_ras_n,
+            sdram_controller_0_wire_we_n                    => sdram_we_n,
+            
+				uart_0_external_connection_rxd                  => uart0_rx,
+            uart_0_external_connection_txd                  => uart0_tx,
+            
+				gpio_0_external_connection_export               => igpio0,
+				gpio_1_adc_external_connection_in_port          => igpio1_adc_in,
+            gpio_1_adc_external_connection_out_port         => igpio1_adc_out
+        );
 
-	ADC0:	SAR generic map(7, 3) port map(
-		clk => clk_1hz,
-		rst => rst,
-		soc=> soc_s,
-		eoc => trash,
-		comp_in => comp_in,
-		data => trash_enl,
-		dac_data => DAC_data
-	);
+	ADC0:	SAR generic map(7, 3) 
+			port map(
+				clk => clk_1hz,
+				rst => rst,
+				soc=> igpio1_adc_out(0),
+				eoc => igpio1_adc_in(1),
+				comp_in => comp_in,
+				data => igpio1_adc_in(9 downto 3),
+				dac_data => DAC_data
+			);
 	
 	rst <= not rst_n;
-	soc_s <= not soc_n;
-	beep <= clk_1hz;
+	gpio0 <= not igpio0;
 	
-	next_cnt <= (others => '0') when (unsigned(curr_cnt) = 5000) else
+	next_cnt <= (others => '0') when (unsigned(curr_cnt) = 1) else
 					std_logic_vector(unsigned(curr_cnt) + 1);
 	
-	clk_1hz <= '1' when (unsigned(curr_cnt) = 5000) else '0';
+	clk_1hz <= '1' when (unsigned(curr_cnt) = 1) else '0';
 	
 	process(clk_5khz, rst)
 	begin

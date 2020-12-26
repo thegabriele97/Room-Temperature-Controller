@@ -6,10 +6,25 @@ Progress: Adding altpll_0 [altpll 20.1]
 Progress: Parameterizing module altpll_0
 Progress: Adding clk_0 [clock_source 20.1]
 Progress: Parameterizing module clk_0
+Progress: Adding core0 [altera_nios2_gen2 20.1]
+Progress: Parameterizing module core0
+Progress: Adding gpio_0 [altera_avalon_pio 20.1]
+Progress: Parameterizing module gpio_0
+Progress: Adding gpio_1_adc [altera_avalon_pio 20.1]
+Progress: Parameterizing module gpio_1_adc
+Progress: Adding sdram_controller_0 [altera_avalon_new_sdram_controller 20.1]
+Progress: Parameterizing module sdram_controller_0
+Progress: Adding timer_0 [altera_avalon_timer 20.1]
+Progress: Parameterizing module timer_0
+Progress: Adding uart_0 [altera_avalon_uart 20.1]
+Progress: Parameterizing module uart_0
 Progress: Building connections
 Progress: Parameterizing connections
 Progress: Validating
 Progress: Done reading input file
+Info: soc.gpio_0: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: soc.gpio_1_adc: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: soc.sdram_controller_0: SDRAM Controller will only be supported in Quartus Prime Standard Edition in the future release.
 Warning: soc.altpll_0: altpll_0.pll_slave must be connected to an Avalon-MM master
 Info: qsys-generate succeeded.
 Info: Finished: Create block symbol file (.bsf)
@@ -22,14 +37,96 @@ Progress: Adding altpll_0 [altpll 20.1]
 Progress: Parameterizing module altpll_0
 Progress: Adding clk_0 [clock_source 20.1]
 Progress: Parameterizing module clk_0
+Progress: Adding core0 [altera_nios2_gen2 20.1]
+Progress: Parameterizing module core0
+Progress: Adding gpio_0 [altera_avalon_pio 20.1]
+Progress: Parameterizing module gpio_0
+Progress: Adding gpio_1_adc [altera_avalon_pio 20.1]
+Progress: Parameterizing module gpio_1_adc
+Progress: Adding sdram_controller_0 [altera_avalon_new_sdram_controller 20.1]
+Progress: Parameterizing module sdram_controller_0
+Progress: Adding timer_0 [altera_avalon_timer 20.1]
+Progress: Parameterizing module timer_0
+Progress: Adding uart_0 [altera_avalon_uart 20.1]
+Progress: Parameterizing module uart_0
 Progress: Building connections
 Progress: Parameterizing connections
 Progress: Validating
 Progress: Done reading input file
+Info: soc.gpio_0: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: soc.gpio_1_adc: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: soc.sdram_controller_0: SDRAM Controller will only be supported in Quartus Prime Standard Edition in the future release.
 Warning: soc.altpll_0: altpll_0.pll_slave must be connected to an Avalon-MM master
 Info: soc: Generating soc "soc" for QUARTUS_SYNTH
 Info: altpll_0: "soc" instantiated altpll "altpll_0"
+Info: core0: "soc" instantiated altera_nios2_gen2 "core0"
+Info: gpio_0: Starting RTL generation for module 'soc_gpio_0'
+Info: gpio_0:   Generation command is [exec D:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I D:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=soc_gpio_0 --dir=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0004_gpio_0_gen/ --quartus_dir=D:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0004_gpio_0_gen//soc_gpio_0_component_configuration.pl  --do_build_sim=0  ]
+Info: gpio_0: Done RTL generation for module 'soc_gpio_0'
+Info: gpio_0: "soc" instantiated altera_avalon_pio "gpio_0"
+Info: gpio_1_adc: Starting RTL generation for module 'soc_gpio_1_adc'
+Info: gpio_1_adc:   Generation command is [exec D:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I D:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=soc_gpio_1_adc --dir=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0005_gpio_1_adc_gen/ --quartus_dir=D:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0005_gpio_1_adc_gen//soc_gpio_1_adc_component_configuration.pl  --do_build_sim=0  ]
+Info: gpio_1_adc: Done RTL generation for module 'soc_gpio_1_adc'
+Info: gpio_1_adc: "soc" instantiated altera_avalon_pio "gpio_1_adc"
+Info: sdram_controller_0: Starting RTL generation for module 'soc_sdram_controller_0'
+Info: sdram_controller_0:   Generation command is [exec D:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I D:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller -- D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller/generate_rtl.pl --name=soc_sdram_controller_0 --dir=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0006_sdram_controller_0_gen/ --quartus_dir=D:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0006_sdram_controller_0_gen//soc_sdram_controller_0_component_configuration.pl  --do_build_sim=0  ]
+Info: sdram_controller_0: Done RTL generation for module 'soc_sdram_controller_0'
+Info: sdram_controller_0: "soc" instantiated altera_avalon_new_sdram_controller "sdram_controller_0"
+Info: timer_0: Starting RTL generation for module 'soc_timer_0'
+Info: timer_0:   Generation command is [exec D:/intelFPGA_lite/20.1/quartus/bin64//perl/bin/perl.exe -I D:/intelFPGA_lite/20.1/quartus/bin64//perl/lib -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_timer -- D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_timer/generate_rtl.pl --name=soc_timer_0 --dir=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0007_timer_0_gen/ --quartus_dir=D:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0007_timer_0_gen//soc_timer_0_component_configuration.pl  --do_build_sim=0  ]
+Info: timer_0: Done RTL generation for module 'soc_timer_0'
+Info: timer_0: "soc" instantiated altera_avalon_timer "timer_0"
+Info: uart_0: Starting RTL generation for module 'soc_uart_0'
+Info: uart_0:   Generation command is [exec D:/intelfpga_lite/20.1/quartus/bin64/perl/bin/perl.exe -I D:/intelfpga_lite/20.1/quartus/bin64/perl/lib -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_uart -- D:/intelfpga_lite/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_uart/generate_rtl.pl --name=soc_uart_0 --dir=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0008_uart_0_gen/ --quartus_dir=D:/intelfpga_lite/20.1/quartus --verilog --config=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0008_uart_0_gen//soc_uart_0_component_configuration.pl  --do_build_sim=0  ]
+Info: uart_0: Done RTL generation for module 'soc_uart_0'
+Info: uart_0: "soc" instantiated altera_avalon_uart "uart_0"
+Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_001: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_002: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_003: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_004: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_005: Inserting error_adapter: error_adapter_0
+Info: mm_interconnect_0: "soc" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: irq_mapper: "soc" instantiated altera_irq_mapper "irq_mapper"
 Info: rst_controller: "soc" instantiated altera_reset_controller "rst_controller"
-Info: soc: Done "soc" with 3 modules, 5 files
+Info: cpu: Starting RTL generation for module 'soc_core0_cpu'
+Info: cpu:   Generation command is [exec D:/intelFPGA_lite/20.1/quartus/bin64//perl/bin/perl.exe -I D:/intelFPGA_lite/20.1/quartus/bin64//perl/lib -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin/europa -I D:/intelfpga_lite/20.1/quartus/sopc_builder/bin -I D:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/cpu_lib -I D:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/nios_lib -I D:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2 -I D:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2 -- D:/intelfpga_lite/20.1/quartus/../ip/altera/nios2_ip/altera_nios2_gen2/generate_rtl.pl --name=soc_core0_cpu --dir=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0011_cpu_gen/ --quartus_bindir=D:/intelFPGA_lite/20.1/quartus/bin64/ --verilog --config=C:/Users/gabri/AppData/Local/Temp/alt8619_3804119655018244198.dir/0011_cpu_gen//soc_core0_cpu_processor_configuration.pl  --do_build_sim=0  ]
+Info: cpu: # 2020.12.23 13:32:34 (*) Starting Nios II generation
+Info: cpu: # 2020.12.23 13:32:34 (*)   Elaborating CPU configuration settings
+Info: cpu: # 2020.12.23 13:32:34 (*)   Creating all objects for CPU
+Info: cpu: # 2020.12.23 13:32:35 (*)   Generating RTL from CPU objects
+Info: cpu: # 2020.12.23 13:32:35 (*)   Creating plain-text RTL
+Info: cpu: # 2020.12.23 13:32:35 (*) Done Nios II generation
+Info: cpu: Done RTL generation for module 'soc_core0_cpu'
+Info: cpu: "core0" instantiated altera_nios2_gen2_unit "cpu"
+Info: core0_data_master_translator: "mm_interconnect_0" instantiated altera_merlin_master_translator "core0_data_master_translator"
+Info: core0_debug_mem_slave_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "core0_debug_mem_slave_translator"
+Info: core0_data_master_agent: "mm_interconnect_0" instantiated altera_merlin_master_agent "core0_data_master_agent"
+Info: core0_debug_mem_slave_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "core0_debug_mem_slave_agent"
+Info: core0_debug_mem_slave_agent_rsp_fifo: "mm_interconnect_0" instantiated altera_avalon_sc_fifo "core0_debug_mem_slave_agent_rsp_fifo"
+Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
+Info: router_001: "mm_interconnect_0" instantiated altera_merlin_router "router_001"
+Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
+Info: router_003: "mm_interconnect_0" instantiated altera_merlin_router "router_003"
+Info: router_004: "mm_interconnect_0" instantiated altera_merlin_router "router_004"
+Info: sdram_controller_0_s1_burst_adapter: "mm_interconnect_0" instantiated altera_merlin_burst_adapter "sdram_controller_0_s1_burst_adapter"
+Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: cmd_demux_001: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux_001"
+Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: cmd_mux_002: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux_002"
+Info: Reusing file C:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/soc/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: rsp_demux_002: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux_002"
+Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: Reusing file C:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/soc/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: rsp_mux_001: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux_001"
+Info: Reusing file C:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/soc/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: sdram_controller_0_s1_rsp_width_adapter: "mm_interconnect_0" instantiated altera_merlin_width_adapter "sdram_controller_0_s1_rsp_width_adapter"
+Info: Reusing file C:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/soc/synthesis/submodules/altera_merlin_address_alignment.sv
+Info: Reusing file C:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/soc/synthesis/submodules/altera_merlin_burst_uncompressor.sv
+Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
+Info: avalon_st_adapter_001: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter_001"
+Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
+Info: error_adapter_0: "avalon_st_adapter_001" instantiated error_adapter "error_adapter_0"
+Info: soc: Done "soc" with 35 modules, 56 files
 Info: qsys-generate succeeded.
 Info: Finished: Create HDL design files for synthesis
