@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>25-Dec-2020 11:56:53</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1608893813386</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>27-Dec-2020 11:29:55</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1609064995225</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\software\RoomTempControllerSW_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc.sopcinfo</SopcDesignFile>
@@ -901,6 +901,30 @@
         <MemoryMap>
                 <slaveDescriptor>gpio_1_adc</slaveDescriptor>
                 <addressRange>0x10000060 - 0x1000007F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gpio_2_pwm0_main</slaveDescriptor>
+                <addressRange>0x10000080 - 0x1000009F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gpio_2_pwm0_prescaler</slaveDescriptor>
+                <addressRange>0x100000A0 - 0x100000BF</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gpio_2_pwm1_main</slaveDescriptor>
+                <addressRange>0x100000C0 - 0x100000DF</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gpio_2_pwm1_prescaler</slaveDescriptor>
+                <addressRange>0x100000E0 - 0x100000FF</addressRange>
                 <addressSpan>32</addressSpan>
                 <attributes/>
         </MemoryMap>

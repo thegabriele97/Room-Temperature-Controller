@@ -120,6 +120,14 @@
 					"strict" : false
 				},
 				{
+					"name" : "pwm0",
+					"strict" : false
+				},
+				{
+					"name" : "pwm1",
+					"strict" : false
+				},
+				{
 					"name" : "sdram_dq[0]",
 					"strict" : false
 				},

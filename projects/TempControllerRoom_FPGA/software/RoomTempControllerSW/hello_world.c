@@ -7,6 +7,7 @@
 
 #include "drivers/uart.h"
 #include "drivers/adc.h"
+#include "drivers/pwm.h"
 
 #define gabriuart_cmd_size			0x5
 #define gabriuart_data_array_size	0xff
@@ -21,20 +22,47 @@ enum {
 
 typedef enum { false, true } bool;
 
+typedef struct {
+	unsigned char value;
+	unsigned int duty0;
+	unsigned int duty1;
+} ths_t;
+
 void _ISR_uart0(void *context, alt_u32 id);
 alt_u8 gabriuart_checksum(alt_u32 crc);
 alt_u32 gabriuart_cmd2_u32(char *v);
 void gabriuart_send(char *cmd, alt_u8 length, alt_u8 *data);
 
 static uart_t uart0;
+static pwm_t pwm0, pwm1;
+
 static unsigned int sampling_period_ms = 1000;
+static unsigned int avg_each_count = 4;
+static ths_t th0, th1, th2;
 
 int main() {
 	int *gpio_base_ptr = GPIO_0_BASE;
+	alt_u8 avg_cnt = 0, data[16];
+	int start, avg_sum = 0;
 	adc_t adc0;
 
-	//char buf[10];
-	int start;
+	th0.value = 32;		//10 °C
+	th0.duty0 = 0;
+	th0.duty1 = 0;
+
+	th1.value = 64;		//20 °C
+	th1.duty0 = 512;
+	th1.duty1 = 0;
+
+	th2.value = 96;		//30 °C
+	th2.duty0 = 1023;
+	th2.duty1 = 512;
+
+	pwm0 = pwm_init(0x10000080, 0x100000a0);
+	pwm_set_dutycycle(pwm0, th1.duty0);
+
+	pwm1 = pwm_init(0x100000c0, 0x100000e0);
+	pwm_set_dutycycle(pwm1, th1.duty1);
 
 	*(gpio_base_ptr + 1) |= 0xf;
 
@@ -48,7 +76,35 @@ int main() {
 	adc0 = adc_init(0x10000060);
 
 	do {
-		uprintf(uart0, "Temp: %.1f °C\r\n", (adc_start_get(adc0) * 400.0) / 128.0 / 10);
+		//uprintf(uart0, "Temp: %.1f °C\r\n", (adc_start_get(adc0) * 400.0) / 128.0 / 10);
+		data[0] = (adc_start_get(adc0) & 0xff);
+		gabriuart_send("CURR", 1, data);
+
+		avg_sum += data[0];
+		avg_cnt++;
+
+		if (avg_cnt >= avg_each_count) {
+			start = 0;
+			data[start++] = ((avg_sum >> 0x00) & 0xff);
+			data[start++] = ((avg_sum >> 0x08) & 0xff);
+			data[start++] = ((avg_sum >> 0x16) & 0xff);
+			data[start++] = ((avg_sum >> 0x18) & 0xff);
+			gabriuart_send("CAVG", 4, data);
+
+			if (avg_sum / (float)avg_cnt > th2.value) {
+				pwm_set_dutycycle(pwm0, th2.duty0);
+				pwm_set_dutycycle(pwm1, th2.duty1);
+			} else if (avg_sum / (float)avg_cnt > th1.value) {
+				pwm_set_dutycycle(pwm0, th1.duty0);
+				pwm_set_dutycycle(pwm1, th1.duty1);
+			} else if (avg_sum / (float)avg_cnt > th0.value) {
+				pwm_set_dutycycle(pwm0, th0.duty0);
+				pwm_set_dutycycle(pwm1, th0.duty1);
+			}
+
+			avg_cnt = 0;
+			avg_sum = 0;
+		}
 
 		start = alt_timestamp_start();
 		while(alt_timestamp() - start < TIMER_INTERVAL(sampling_period_ms, alt_timestamp_freq()));
@@ -94,13 +150,13 @@ void _ISR_uart0(void *context, alt_u32 id) {
 
 	if (buffer_post == 6) {
 		i = buffer[buffer_post - 1]; // this is the expected length
-	} else if (buffer_post > 6 && i > 0) {
+	} else if (buffer_post > 6) {
 		i--; //counting remaining expected data
 	}
 
 	is_stx = is_stx || (ch == '\x2');
-	if (is_stx && (ch == '\x3' && i == 0)) { // The check on expected data count is done in order to exploit a "\x3" that is a data and not ETX
-
+	if (is_stx && (ch == '\x3' && i == -2)) { // The check on expected data count is done in order to exploit a "\x3" that is a data and not ETX
+											  // -2 because after data I expect checksum + ETX
 		checksum_val = gabriuart_checksum(gabriuart_cmd2_u32(buffer + 1));
 		for (i = 0; i < buffer[5]; i++) {
 			checksum_val += gabriuart_checksum((alt_u32)buffer[i + 6] & 0xff);
@@ -120,11 +176,35 @@ void _ISR_uart0(void *context, alt_u32 id) {
 				break;
 
 			case CSET:
-				ptr = buffer + buffer_post - 6;
+				ptr = buffer + buffer_post - 22;
 				sampling_period_ms = (((alt_u32)ptr[0] << 0x00) & 0xff) 	  |
 									 (((alt_u32)ptr[1] << 0x08) & 0xff00) 	  |
 									 (((alt_u32)ptr[2] << 0x10) & 0xff0000)   |
 									 (((alt_u32)ptr[3] << 0x18) & 0xff000000);
+
+				avg_each_count = ptr[4];
+
+				th0.value = ptr[05];
+				th1.value = ptr[10];
+				th2.value = ptr[15];
+
+				th0.duty0 = (((alt_u32)ptr[6] << 0x00) & 0xff) 	  |
+						 	(((alt_u32)ptr[7] << 0x08) & 0xff00);
+
+				th0.duty1 = (((alt_u32)ptr[8] << 0x00) & 0xff) 	  |
+						 	(((alt_u32)ptr[9] << 0x08) & 0xff00);
+
+				th1.duty0 = (((alt_u32)ptr[11] << 0x00) & 0xff) 	  |
+						 	(((alt_u32)ptr[12] << 0x08) & 0xff00);
+
+				th1.duty1 = (((alt_u32)ptr[13] << 0x00) & 0xff) 	  |
+						 	(((alt_u32)ptr[14] << 0x08) & 0xff00);
+
+				th2.duty0 = (((alt_u32)ptr[16] << 0x00) & 0xff) 	  |
+						 	(((alt_u32)ptr[17] << 0x08) & 0xff00);
+
+				th2.duty1 = (((alt_u32)ptr[18] << 0x00) & 0xff) 	  |
+						 	(((alt_u32)ptr[19] << 0x08) & 0xff00);
 
 				break;
 
@@ -135,6 +215,26 @@ void _ISR_uart0(void *context, alt_u32 id) {
 				buffer[i++] = ((sampling_period_ms >> 0x08) & 0xff);
 				buffer[i++] = ((sampling_period_ms >> 0x16) & 0xff);
 				buffer[i++] = ((sampling_period_ms >> 0x18) & 0xff);
+
+				buffer[i++] = (avg_each_count & 0xff);
+
+				buffer[i++] = (th0.value & 0xff);
+				buffer[i++] = ((th0.duty0 >> 0x00) & 0xff);
+				buffer[i++] = ((th0.duty0 >> 0x08) & 0xff);
+				buffer[i++] = ((th0.duty1 >> 0x00) & 0xff);
+				buffer[i++] = ((th0.duty1 >> 0x08) & 0xff);
+
+				buffer[i++] = (th1.value & 0xff);
+				buffer[i++] = ((th1.duty0 >> 0x00) & 0xff);
+				buffer[i++] = ((th1.duty0 >> 0x08) & 0xff);
+				buffer[i++] = ((th1.duty1 >> 0x00) & 0xff);
+				buffer[i++] = ((th1.duty1 >> 0x08) & 0xff);
+
+				buffer[i++] = (th2.value & 0xff);
+				buffer[i++] = ((th2.duty0 >> 0x00) & 0xff);
+				buffer[i++] = ((th2.duty0 >> 0x08) & 0xff);
+				buffer[i++] = ((th2.duty1 >> 0x00) & 0xff);
+				buffer[i++] = ((th2.duty1 >> 0x08) & 0xff);
 
 				gabriuart_send("CSEN", (i - buffer_post), (alt_u8 *)(buffer + buffer_post));
 				break;

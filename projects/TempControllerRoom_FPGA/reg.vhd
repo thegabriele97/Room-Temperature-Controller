@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 entity reg is
     generic(
@@ -53,7 +54,7 @@ begin
     begin
     
         if (rst = '1') then
-            curr_val <= (others => '0');
+            curr_val <= std_logic_vector(TO_UNSIGNED(256, curr_val'length));
             curr_state <= wait_nv;
         elsif (rising_edge(clk)) then
             curr_val <= next_val;

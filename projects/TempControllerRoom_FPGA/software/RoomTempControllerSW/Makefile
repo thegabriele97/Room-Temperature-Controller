@@ -92,6 +92,7 @@ ELF := RoomTempControllerSW.elf
 C_SRCS += hello_world.c
 C_SRCS += drivers/uart.c
 C_SRCS += drivers/adc.c
+C_SRCS += drivers/pwm.c
 CXX_SRCS :=
 ASM_SRCS :=
 

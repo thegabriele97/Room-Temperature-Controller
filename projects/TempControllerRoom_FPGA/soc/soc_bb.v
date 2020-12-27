@@ -4,6 +4,9 @@ module soc (
 	core0_cpu_resetrequest_conduit_cpu_resetrequest,
 	core0_cpu_resetrequest_conduit_cpu_resettaken,
 	gpio_0_external_connection_export,
+	gpio_1_adc_external_connection_in_port,
+	gpio_1_adc_external_connection_out_port,
+	pll_2mhz_clk,
 	pll_5khz_clk,
 	sdram_clk_clk,
 	sdram_controller_0_wire_addr,
@@ -17,13 +20,20 @@ module soc (
 	sdram_controller_0_wire_we_n,
 	uart_0_external_connection_rxd,
 	uart_0_external_connection_txd,
-	gpio_1_adc_external_connection_in_port,
-	gpio_1_adc_external_connection_out_port);	
+	gpio_2_pwm0_main_external_connection_in_port,
+	gpio_2_pwm0_main_external_connection_out_port,
+	gpio_2_pwm0_prescaler_external_connection_export,
+	gpio_2_pwm1_main_external_connection_in_port,
+	gpio_2_pwm1_main_external_connection_out_port,
+	gpio_2_pwm1_prescaler_external_connection_export);	
 
 	input		clk_clk;
 	input		core0_cpu_resetrequest_conduit_cpu_resetrequest;
 	output		core0_cpu_resetrequest_conduit_cpu_resettaken;
 	inout	[3:0]	gpio_0_external_connection_export;
+	input	[9:0]	gpio_1_adc_external_connection_in_port;
+	output	[9:0]	gpio_1_adc_external_connection_out_port;
+	output		pll_2mhz_clk;
 	output		pll_5khz_clk;
 	output		sdram_clk_clk;
 	output	[11:0]	sdram_controller_0_wire_addr;
@@ -37,6 +47,10 @@ module soc (
 	output		sdram_controller_0_wire_we_n;
 	input		uart_0_external_connection_rxd;
 	output		uart_0_external_connection_txd;
-	input	[9:0]	gpio_1_adc_external_connection_in_port;
-	output	[9:0]	gpio_1_adc_external_connection_out_port;
+	input	[13:0]	gpio_2_pwm0_main_external_connection_in_port;
+	output	[13:0]	gpio_2_pwm0_main_external_connection_out_port;
+	output	[31:0]	gpio_2_pwm0_prescaler_external_connection_export;
+	input	[13:0]	gpio_2_pwm1_main_external_connection_in_port;
+	output	[13:0]	gpio_2_pwm1_main_external_connection_out_port;
+	output	[31:0]	gpio_2_pwm1_prescaler_external_connection_export;
 endmodule

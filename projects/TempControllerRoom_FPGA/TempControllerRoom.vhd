@@ -29,6 +29,10 @@ entity TempControllerRoom is
 		uart0_rx								: in std_logic;
 		uart0_tx								: out std_logic;
 		
+		--PWM
+		pwm0									: out std_logic;
+		pwm1									: out std_logic;
+		
 		--Temporary GPIO0
 		gpio0									: inout std_logic_vector(3 downto 0)
 		
@@ -64,11 +68,31 @@ architecture mixture of TempControllerRoom is
 			
 		);
 	end component;
+	
+	component pwm is
+		 generic(
+			  nbits_pwm, nbits_divisor: integer
+		 );    
+		 port(
+			  clk, rst: in std_logic;
+			  
+			  divisor: in std_logic_vector((nbits_divisor-1) downto 0);
+			  ld_divisor: in std_logic;
+			  done_divisor: out std_logic;
+			  
+			  duty: in std_logic_vector((nbits_pwm-1) downto 0);
+			  ld_duty: in std_logic;
+			  done_duty: out std_logic;
+			  
+			  pwm_out: out std_logic
+		 );
+	end component;
 
     component soc is
         port (
             pll_5khz_clk                                    : out   std_logic;                                        -- clk
-            clk_clk                                         : in    std_logic                     := 'X';             -- clk
+            pll_2mhz_clk                                    : out   std_logic;
+				clk_clk                                         : in    std_logic                     := 'X';             -- clk
             sdram_clk_clk                                   : out   std_logic;                                        -- clk
             core0_cpu_resetrequest_conduit_cpu_resetrequest : in    std_logic                     := 'X';             -- cpu_resetrequest
             core0_cpu_resetrequest_conduit_cpu_resettaken   : out   std_logic;                                        -- cpu_resettaken
@@ -85,14 +109,20 @@ architecture mixture of TempControllerRoom is
             uart_0_external_connection_txd                  : out   std_logic;                                        -- txd
             gpio_0_external_connection_export               : inout std_logic_vector(3 downto 0)  := (others => 'X'); -- export
 				gpio_1_adc_external_connection_in_port          : in    std_logic_vector(9 downto 0)  := (others => 'X'); -- in_port
-            gpio_1_adc_external_connection_out_port         : out   std_logic_vector(9 downto 0)                      -- out_port
+            gpio_1_adc_external_connection_out_port         : out   std_logic_vector(9 downto 0);                     -- out_port
+				gpio_2_pwm0_main_external_connection_in_port     : in    std_logic_vector(13 downto 0) := (others => 'X'); -- in_port
+            gpio_2_pwm0_main_external_connection_out_port    : out   std_logic_vector(13 downto 0);                    -- out_port
+            gpio_2_pwm0_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- export
+            gpio_2_pwm1_main_external_connection_in_port     : in    std_logic_vector(13 downto 0) := (others => 'X'); -- in_port
+            gpio_2_pwm1_main_external_connection_out_port    : out   std_logic_vector(13 downto 0);                    -- out_port
+            gpio_2_pwm1_prescaler_external_connection_export : out   std_logic_vector(31 downto 0)                     -- export
 		  );
     end component soc;
 
 	for ADC0: SAR use entity work.SAR(hlsm2);
 	
 	 
-	signal clk_1hz, clk_5khz: std_logic;
+	signal clk_1hz, clk_5khz, clk_2mhz: std_logic;
 	signal rst: std_logic;
 	
 	signal igpio0: std_logic_vector(3 downto 0);
@@ -101,13 +131,19 @@ architecture mixture of TempControllerRoom is
 																									-- 	 2: reserved
 																									-- [3-9]: ADC data
 	
+	signal igpio2_pwm0_main_in, igpio2_pwm0_main_out, igpio2_pwm1_main_in, igpio2_pwm1_main_out: std_logic_vector(13 downto 0);
+	signal igpio2_pwm0_prescaler, igpio2_pwm1_prescaler: std_logic_vector(31 downto 0);
+	
 	signal curr_cnt, next_cnt: std_logic_vector(31 downto 0);
+	
+	signal done_div, done_d: std_logic;
 	
 begin
 
     u0 : component soc
         port map (
             pll_5khz_clk                                    => clk_5khz,
+				pll_2mhz_clk                                    => clk_2mhz,
             clk_clk                                         => clk_in,
             sdram_clk_clk                                   => sdram_clk,
             
@@ -129,7 +165,14 @@ begin
             
 				gpio_0_external_connection_export               => igpio0,
 				gpio_1_adc_external_connection_in_port          => igpio1_adc_in,
-            gpio_1_adc_external_connection_out_port         => igpio1_adc_out
+            gpio_1_adc_external_connection_out_port         => igpio1_adc_out,
+				
+				gpio_2_pwm0_main_external_connection_in_port    => igpio2_pwm0_main_in,
+            gpio_2_pwm0_main_external_connection_out_port   => igpio2_pwm0_main_out,
+            gpio_2_pwm0_prescaler_external_connection_export => igpio2_pwm0_prescaler,
+            gpio_2_pwm1_main_external_connection_in_port    => igpio2_pwm1_main_in,
+            gpio_2_pwm1_main_external_connection_out_port   => igpio2_pwm1_main_out,
+            gpio_2_pwm1_prescaler_external_connection_export => igpio2_pwm1_prescaler
         );
 
 	ADC0:	SAR generic map(7, 3) 
@@ -142,7 +185,33 @@ begin
 				data => igpio1_adc_in(9 downto 3),
 				dac_data => DAC_data
 			);
-	
+			
+	PWM0_dev: pwm generic map(10, 32)
+			port map(
+				clk => clk_2mhz,
+				rst => rst,
+				divisor => x"00000001",
+				ld_divisor => '0',
+				done_divisor => done_div,
+				duty => igpio2_pwm0_main_out(13 downto 4),
+				ld_duty => igpio2_pwm0_main_out(2),
+				done_duty => igpio2_pwm0_main_in(3),
+				pwm_out => pwm0
+			);
+
+	PWM1_dev: pwm generic map(10, 32)
+			port map(
+				clk => clk_2mhz,
+				rst => rst,
+				divisor => x"00000001",
+				ld_divisor => '0',
+				done_divisor => done_div,
+				duty => igpio2_pwm1_main_out(13 downto 4),
+				ld_duty => igpio2_pwm1_main_out(2),
+				done_duty => igpio2_pwm1_main_in(3),
+				pwm_out => pwm1
+			);
+		
 	rst <= not rst_n;
 	gpio0 <= not igpio0;
 	

@@ -8,25 +8,32 @@ use IEEE.numeric_std.all;
 
 entity soc is
 	port (
-		clk_clk                                         : in    std_logic                     := '0';             --                            clk.clk
-		core0_cpu_resetrequest_conduit_cpu_resetrequest : in    std_logic                     := '0';             -- core0_cpu_resetrequest_conduit.cpu_resetrequest
-		core0_cpu_resetrequest_conduit_cpu_resettaken   : out   std_logic;                                        --                               .cpu_resettaken
-		gpio_0_external_connection_export               : inout std_logic_vector(3 downto 0)  := (others => '0'); --     gpio_0_external_connection.export
-		gpio_1_adc_external_connection_in_port          : in    std_logic_vector(9 downto 0)  := (others => '0'); -- gpio_1_adc_external_connection.in_port
-		gpio_1_adc_external_connection_out_port         : out   std_logic_vector(9 downto 0);                     --                               .out_port
-		pll_5khz_clk                                    : out   std_logic;                                        --                       pll_5khz.clk
-		sdram_clk_clk                                   : out   std_logic;                                        --                      sdram_clk.clk
-		sdram_controller_0_wire_addr                    : out   std_logic_vector(11 downto 0);                    --        sdram_controller_0_wire.addr
-		sdram_controller_0_wire_ba                      : out   std_logic_vector(1 downto 0);                     --                               .ba
-		sdram_controller_0_wire_cas_n                   : out   std_logic;                                        --                               .cas_n
-		sdram_controller_0_wire_cke                     : out   std_logic;                                        --                               .cke
-		sdram_controller_0_wire_cs_n                    : out   std_logic;                                        --                               .cs_n
-		sdram_controller_0_wire_dq                      : inout std_logic_vector(15 downto 0) := (others => '0'); --                               .dq
-		sdram_controller_0_wire_dqm                     : out   std_logic_vector(1 downto 0);                     --                               .dqm
-		sdram_controller_0_wire_ras_n                   : out   std_logic;                                        --                               .ras_n
-		sdram_controller_0_wire_we_n                    : out   std_logic;                                        --                               .we_n
-		uart_0_external_connection_rxd                  : in    std_logic                     := '0';             --     uart_0_external_connection.rxd
-		uart_0_external_connection_txd                  : out   std_logic                                         --                               .txd
+		clk_clk                                          : in    std_logic                     := '0';             --                                       clk.clk
+		core0_cpu_resetrequest_conduit_cpu_resetrequest  : in    std_logic                     := '0';             --            core0_cpu_resetrequest_conduit.cpu_resetrequest
+		core0_cpu_resetrequest_conduit_cpu_resettaken    : out   std_logic;                                        --                                          .cpu_resettaken
+		gpio_0_external_connection_export                : inout std_logic_vector(3 downto 0)  := (others => '0'); --                gpio_0_external_connection.export
+		gpio_1_adc_external_connection_in_port           : in    std_logic_vector(9 downto 0)  := (others => '0'); --            gpio_1_adc_external_connection.in_port
+		gpio_1_adc_external_connection_out_port          : out   std_logic_vector(9 downto 0);                     --                                          .out_port
+		gpio_2_pwm0_main_external_connection_in_port     : in    std_logic_vector(13 downto 0) := (others => '0'); --      gpio_2_pwm0_main_external_connection.in_port
+		gpio_2_pwm0_main_external_connection_out_port    : out   std_logic_vector(13 downto 0);                    --                                          .out_port
+		gpio_2_pwm0_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- gpio_2_pwm0_prescaler_external_connection.export
+		gpio_2_pwm1_main_external_connection_in_port     : in    std_logic_vector(13 downto 0) := (others => '0'); --      gpio_2_pwm1_main_external_connection.in_port
+		gpio_2_pwm1_main_external_connection_out_port    : out   std_logic_vector(13 downto 0);                    --                                          .out_port
+		gpio_2_pwm1_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- gpio_2_pwm1_prescaler_external_connection.export
+		pll_2mhz_clk                                     : out   std_logic;                                        --                                  pll_2mhz.clk
+		pll_5khz_clk                                     : out   std_logic;                                        --                                  pll_5khz.clk
+		sdram_clk_clk                                    : out   std_logic;                                        --                                 sdram_clk.clk
+		sdram_controller_0_wire_addr                     : out   std_logic_vector(11 downto 0);                    --                   sdram_controller_0_wire.addr
+		sdram_controller_0_wire_ba                       : out   std_logic_vector(1 downto 0);                     --                                          .ba
+		sdram_controller_0_wire_cas_n                    : out   std_logic;                                        --                                          .cas_n
+		sdram_controller_0_wire_cke                      : out   std_logic;                                        --                                          .cke
+		sdram_controller_0_wire_cs_n                     : out   std_logic;                                        --                                          .cs_n
+		sdram_controller_0_wire_dq                       : inout std_logic_vector(15 downto 0) := (others => '0'); --                                          .dq
+		sdram_controller_0_wire_dqm                      : out   std_logic_vector(1 downto 0);                     --                                          .dqm
+		sdram_controller_0_wire_ras_n                    : out   std_logic;                                        --                                          .ras_n
+		sdram_controller_0_wire_we_n                     : out   std_logic;                                        --                                          .we_n
+		uart_0_external_connection_rxd                   : in    std_logic                     := '0';             --                uart_0_external_connection.rxd
+		uart_0_external_connection_txd                   : out   std_logic                                         --                                          .txd
 	);
 end entity soc;
 
@@ -43,6 +50,7 @@ architecture rtl of soc is
 			c0                 : out std_logic;                                        -- clk
 			c1                 : out std_logic;                                        -- clk
 			c2                 : out std_logic;                                        -- clk
+			c3                 : out std_logic;                                        -- clk
 			scandone           : out std_logic;                                        -- export
 			scandataout        : out std_logic;                                        -- export
 			areset             : in  std_logic                     := 'X';             -- export
@@ -116,6 +124,33 @@ architecture rtl of soc is
 			out_port   : out std_logic_vector(9 downto 0)                      -- export
 		);
 	end component soc_gpio_1_adc;
+
+	component soc_gpio_2_pwm0_main is
+		port (
+			clk        : in  std_logic                     := 'X';             -- clk
+			reset_n    : in  std_logic                     := 'X';             -- reset_n
+			address    : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- address
+			write_n    : in  std_logic                     := 'X';             -- write_n
+			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			chipselect : in  std_logic                     := 'X';             -- chipselect
+			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
+			in_port    : in  std_logic_vector(13 downto 0) := (others => 'X'); -- export
+			out_port   : out std_logic_vector(13 downto 0)                     -- export
+		);
+	end component soc_gpio_2_pwm0_main;
+
+	component soc_gpio_2_pwm0_prescaler is
+		port (
+			clk        : in  std_logic                     := 'X';             -- clk
+			reset_n    : in  std_logic                     := 'X';             -- reset_n
+			address    : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- address
+			write_n    : in  std_logic                     := 'X';             -- write_n
+			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			chipselect : in  std_logic                     := 'X';             -- chipselect
+			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
+			out_port   : out std_logic_vector(31 downto 0)                     -- export
+		);
+	end component soc_gpio_2_pwm0_prescaler;
 
 	component soc_sdram_controller_0 is
 		port (
@@ -206,6 +241,26 @@ architecture rtl of soc is
 			gpio_1_adc_s1_readdata                  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			gpio_1_adc_s1_writedata                 : out std_logic_vector(31 downto 0);                    -- writedata
 			gpio_1_adc_s1_chipselect                : out std_logic;                                        -- chipselect
+			gpio_2_pwm0_main_s1_address             : out std_logic_vector(2 downto 0);                     -- address
+			gpio_2_pwm0_main_s1_write               : out std_logic;                                        -- write
+			gpio_2_pwm0_main_s1_readdata            : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			gpio_2_pwm0_main_s1_writedata           : out std_logic_vector(31 downto 0);                    -- writedata
+			gpio_2_pwm0_main_s1_chipselect          : out std_logic;                                        -- chipselect
+			gpio_2_pwm0_prescaler_s1_address        : out std_logic_vector(2 downto 0);                     -- address
+			gpio_2_pwm0_prescaler_s1_write          : out std_logic;                                        -- write
+			gpio_2_pwm0_prescaler_s1_readdata       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			gpio_2_pwm0_prescaler_s1_writedata      : out std_logic_vector(31 downto 0);                    -- writedata
+			gpio_2_pwm0_prescaler_s1_chipselect     : out std_logic;                                        -- chipselect
+			gpio_2_pwm1_main_s1_address             : out std_logic_vector(2 downto 0);                     -- address
+			gpio_2_pwm1_main_s1_write               : out std_logic;                                        -- write
+			gpio_2_pwm1_main_s1_readdata            : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			gpio_2_pwm1_main_s1_writedata           : out std_logic_vector(31 downto 0);                    -- writedata
+			gpio_2_pwm1_main_s1_chipselect          : out std_logic;                                        -- chipselect
+			gpio_2_pwm1_prescaler_s1_address        : out std_logic_vector(2 downto 0);                     -- address
+			gpio_2_pwm1_prescaler_s1_write          : out std_logic;                                        -- write
+			gpio_2_pwm1_prescaler_s1_readdata       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			gpio_2_pwm1_prescaler_s1_writedata      : out std_logic_vector(31 downto 0);                    -- writedata
+			gpio_2_pwm1_prescaler_s1_chipselect     : out std_logic;                                        -- chipselect
 			sdram_controller_0_s1_address           : out std_logic_vector(21 downto 0);                    -- address
 			sdram_controller_0_s1_write             : out std_logic;                                        -- write
 			sdram_controller_0_s1_read              : out std_logic;                                        -- read
@@ -306,7 +361,7 @@ architecture rtl of soc is
 		);
 	end component altera_reset_controller;
 
-	signal altpll_0_c1_clk                                              : std_logic;                     -- altpll_0:c1 -> [core0:clk, gpio_0:clk, gpio_1_adc:clk, irq_mapper:clk, mm_interconnect_0:altpll_0_c1_clk, rst_controller_001:clk, sdram_controller_0:clk, timer_0:clk, uart_0:clk]
+	signal altpll_0_c1_clk                                              : std_logic;                     -- altpll_0:c1 -> [core0:clk, gpio_0:clk, gpio_1_adc:clk, gpio_2_pwm0_main:clk, gpio_2_pwm0_prescaler:clk, gpio_2_pwm1_main:clk, gpio_2_pwm1_prescaler:clk, irq_mapper:clk, mm_interconnect_0:altpll_0_c1_clk, rst_controller_001:clk, sdram_controller_0:clk, timer_0:clk, uart_0:clk]
 	signal core0_debug_reset_request_reset                              : std_logic;                     -- core0:debug_reset_request -> [rst_controller:reset_in0, rst_controller_001:reset_in0]
 	signal core0_data_master_readdata                                   : std_logic_vector(31 downto 0); -- mm_interconnect_0:core0_data_master_readdata -> core0:d_readdata
 	signal core0_data_master_waitrequest                                : std_logic;                     -- mm_interconnect_0:core0_data_master_waitrequest -> core0:d_waitrequest
@@ -359,6 +414,26 @@ architecture rtl of soc is
 	signal mm_interconnect_0_gpio_1_adc_s1_address                      : std_logic_vector(2 downto 0);  -- mm_interconnect_0:gpio_1_adc_s1_address -> gpio_1_adc:address
 	signal mm_interconnect_0_gpio_1_adc_s1_write                        : std_logic;                     -- mm_interconnect_0:gpio_1_adc_s1_write -> mm_interconnect_0_gpio_1_adc_s1_write:in
 	signal mm_interconnect_0_gpio_1_adc_s1_writedata                    : std_logic_vector(31 downto 0); -- mm_interconnect_0:gpio_1_adc_s1_writedata -> gpio_1_adc:writedata
+	signal mm_interconnect_0_gpio_2_pwm0_main_s1_chipselect             : std_logic;                     -- mm_interconnect_0:gpio_2_pwm0_main_s1_chipselect -> gpio_2_pwm0_main:chipselect
+	signal mm_interconnect_0_gpio_2_pwm0_main_s1_readdata               : std_logic_vector(31 downto 0); -- gpio_2_pwm0_main:readdata -> mm_interconnect_0:gpio_2_pwm0_main_s1_readdata
+	signal mm_interconnect_0_gpio_2_pwm0_main_s1_address                : std_logic_vector(2 downto 0);  -- mm_interconnect_0:gpio_2_pwm0_main_s1_address -> gpio_2_pwm0_main:address
+	signal mm_interconnect_0_gpio_2_pwm0_main_s1_write                  : std_logic;                     -- mm_interconnect_0:gpio_2_pwm0_main_s1_write -> mm_interconnect_0_gpio_2_pwm0_main_s1_write:in
+	signal mm_interconnect_0_gpio_2_pwm0_main_s1_writedata              : std_logic_vector(31 downto 0); -- mm_interconnect_0:gpio_2_pwm0_main_s1_writedata -> gpio_2_pwm0_main:writedata
+	signal mm_interconnect_0_gpio_2_pwm0_prescaler_s1_chipselect        : std_logic;                     -- mm_interconnect_0:gpio_2_pwm0_prescaler_s1_chipselect -> gpio_2_pwm0_prescaler:chipselect
+	signal mm_interconnect_0_gpio_2_pwm0_prescaler_s1_readdata          : std_logic_vector(31 downto 0); -- gpio_2_pwm0_prescaler:readdata -> mm_interconnect_0:gpio_2_pwm0_prescaler_s1_readdata
+	signal mm_interconnect_0_gpio_2_pwm0_prescaler_s1_address           : std_logic_vector(2 downto 0);  -- mm_interconnect_0:gpio_2_pwm0_prescaler_s1_address -> gpio_2_pwm0_prescaler:address
+	signal mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write             : std_logic;                     -- mm_interconnect_0:gpio_2_pwm0_prescaler_s1_write -> mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write:in
+	signal mm_interconnect_0_gpio_2_pwm0_prescaler_s1_writedata         : std_logic_vector(31 downto 0); -- mm_interconnect_0:gpio_2_pwm0_prescaler_s1_writedata -> gpio_2_pwm0_prescaler:writedata
+	signal mm_interconnect_0_gpio_2_pwm1_main_s1_chipselect             : std_logic;                     -- mm_interconnect_0:gpio_2_pwm1_main_s1_chipselect -> gpio_2_pwm1_main:chipselect
+	signal mm_interconnect_0_gpio_2_pwm1_main_s1_readdata               : std_logic_vector(31 downto 0); -- gpio_2_pwm1_main:readdata -> mm_interconnect_0:gpio_2_pwm1_main_s1_readdata
+	signal mm_interconnect_0_gpio_2_pwm1_main_s1_address                : std_logic_vector(2 downto 0);  -- mm_interconnect_0:gpio_2_pwm1_main_s1_address -> gpio_2_pwm1_main:address
+	signal mm_interconnect_0_gpio_2_pwm1_main_s1_write                  : std_logic;                     -- mm_interconnect_0:gpio_2_pwm1_main_s1_write -> mm_interconnect_0_gpio_2_pwm1_main_s1_write:in
+	signal mm_interconnect_0_gpio_2_pwm1_main_s1_writedata              : std_logic_vector(31 downto 0); -- mm_interconnect_0:gpio_2_pwm1_main_s1_writedata -> gpio_2_pwm1_main:writedata
+	signal mm_interconnect_0_gpio_2_pwm1_prescaler_s1_chipselect        : std_logic;                     -- mm_interconnect_0:gpio_2_pwm1_prescaler_s1_chipselect -> gpio_2_pwm1_prescaler:chipselect
+	signal mm_interconnect_0_gpio_2_pwm1_prescaler_s1_readdata          : std_logic_vector(31 downto 0); -- gpio_2_pwm1_prescaler:readdata -> mm_interconnect_0:gpio_2_pwm1_prescaler_s1_readdata
+	signal mm_interconnect_0_gpio_2_pwm1_prescaler_s1_address           : std_logic_vector(2 downto 0);  -- mm_interconnect_0:gpio_2_pwm1_prescaler_s1_address -> gpio_2_pwm1_prescaler:address
+	signal mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write             : std_logic;                     -- mm_interconnect_0:gpio_2_pwm1_prescaler_s1_write -> mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write:in
+	signal mm_interconnect_0_gpio_2_pwm1_prescaler_s1_writedata         : std_logic_vector(31 downto 0); -- mm_interconnect_0:gpio_2_pwm1_prescaler_s1_writedata -> gpio_2_pwm1_prescaler:writedata
 	signal irq_mapper_receiver0_irq                                     : std_logic;                     -- timer_0:irq -> irq_mapper:receiver0_irq
 	signal irq_mapper_receiver1_irq                                     : std_logic;                     -- uart_0:irq -> irq_mapper:receiver1_irq
 	signal core0_irq_irq                                                : std_logic_vector(31 downto 0); -- irq_mapper:sender_irq -> core0:irq
@@ -372,7 +447,11 @@ architecture rtl of soc is
 	signal mm_interconnect_0_uart_0_s1_write_ports_inv                  : std_logic;                     -- mm_interconnect_0_uart_0_s1_write:inv -> uart_0:write_n
 	signal mm_interconnect_0_gpio_0_s1_write_ports_inv                  : std_logic;                     -- mm_interconnect_0_gpio_0_s1_write:inv -> gpio_0:write_n
 	signal mm_interconnect_0_gpio_1_adc_s1_write_ports_inv              : std_logic;                     -- mm_interconnect_0_gpio_1_adc_s1_write:inv -> gpio_1_adc:write_n
-	signal rst_controller_001_reset_out_reset_ports_inv                 : std_logic;                     -- rst_controller_001_reset_out_reset:inv -> [core0:reset_n, gpio_0:reset_n, gpio_1_adc:reset_n, sdram_controller_0:reset_n, timer_0:reset_n, uart_0:reset_n]
+	signal mm_interconnect_0_gpio_2_pwm0_main_s1_write_ports_inv        : std_logic;                     -- mm_interconnect_0_gpio_2_pwm0_main_s1_write:inv -> gpio_2_pwm0_main:write_n
+	signal mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write_ports_inv   : std_logic;                     -- mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write:inv -> gpio_2_pwm0_prescaler:write_n
+	signal mm_interconnect_0_gpio_2_pwm1_main_s1_write_ports_inv        : std_logic;                     -- mm_interconnect_0_gpio_2_pwm1_main_s1_write:inv -> gpio_2_pwm1_main:write_n
+	signal mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write_ports_inv   : std_logic;                     -- mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write:inv -> gpio_2_pwm1_prescaler:write_n
+	signal rst_controller_001_reset_out_reset_ports_inv                 : std_logic;                     -- rst_controller_001_reset_out_reset:inv -> [core0:reset_n, gpio_0:reset_n, gpio_1_adc:reset_n, gpio_2_pwm0_main:reset_n, gpio_2_pwm0_prescaler:reset_n, gpio_2_pwm1_main:reset_n, gpio_2_pwm1_prescaler:reset_n, sdram_controller_0:reset_n, timer_0:reset_n, uart_0:reset_n]
 
 begin
 
@@ -388,6 +467,7 @@ begin
 			c0                 => pll_5khz_clk,                   --                    c0.clk
 			c1                 => altpll_0_c1_clk,                --                    c1.clk
 			c2                 => sdram_clk_clk,                  --                    c2.clk
+			c3                 => pll_2mhz_clk,                   --                    c3.clk
 			scandone           => open,                           --           (terminated)
 			scandataout        => open,                           --           (terminated)
 			areset             => '0',                            --           (terminated)
@@ -456,6 +536,56 @@ begin
 			readdata   => mm_interconnect_0_gpio_1_adc_s1_readdata,        --                    .readdata
 			in_port    => gpio_1_adc_external_connection_in_port,          -- external_connection.export
 			out_port   => gpio_1_adc_external_connection_out_port          --                    .export
+		);
+
+	gpio_2_pwm0_main : component soc_gpio_2_pwm0_main
+		port map (
+			clk        => altpll_0_c1_clk,                                       --                 clk.clk
+			reset_n    => rst_controller_001_reset_out_reset_ports_inv,          --               reset.reset_n
+			address    => mm_interconnect_0_gpio_2_pwm0_main_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_gpio_2_pwm0_main_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_gpio_2_pwm0_main_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_gpio_2_pwm0_main_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_gpio_2_pwm0_main_s1_readdata,        --                    .readdata
+			in_port    => gpio_2_pwm0_main_external_connection_in_port,          -- external_connection.export
+			out_port   => gpio_2_pwm0_main_external_connection_out_port          --                    .export
+		);
+
+	gpio_2_pwm0_prescaler : component soc_gpio_2_pwm0_prescaler
+		port map (
+			clk        => altpll_0_c1_clk,                                            --                 clk.clk
+			reset_n    => rst_controller_001_reset_out_reset_ports_inv,               --               reset.reset_n
+			address    => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_readdata,        --                    .readdata
+			out_port   => gpio_2_pwm0_prescaler_external_connection_export            -- external_connection.export
+		);
+
+	gpio_2_pwm1_main : component soc_gpio_2_pwm0_main
+		port map (
+			clk        => altpll_0_c1_clk,                                       --                 clk.clk
+			reset_n    => rst_controller_001_reset_out_reset_ports_inv,          --               reset.reset_n
+			address    => mm_interconnect_0_gpio_2_pwm1_main_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_gpio_2_pwm1_main_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_gpio_2_pwm1_main_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_gpio_2_pwm1_main_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_gpio_2_pwm1_main_s1_readdata,        --                    .readdata
+			in_port    => gpio_2_pwm1_main_external_connection_in_port,          -- external_connection.export
+			out_port   => gpio_2_pwm1_main_external_connection_out_port          --                    .export
+		);
+
+	gpio_2_pwm1_prescaler : component soc_gpio_2_pwm0_prescaler
+		port map (
+			clk        => altpll_0_c1_clk,                                            --                 clk.clk
+			reset_n    => rst_controller_001_reset_out_reset_ports_inv,               --               reset.reset_n
+			address    => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_address,         --                  s1.address
+			write_n    => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write_ports_inv, --                    .write_n
+			writedata  => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_writedata,       --                    .writedata
+			chipselect => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_chipselect,      --                    .chipselect
+			readdata   => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_readdata,        --                    .readdata
+			out_port   => gpio_2_pwm1_prescaler_external_connection_export            -- external_connection.export
 		);
 
 	sdram_controller_0 : component soc_sdram_controller_0
@@ -544,6 +674,26 @@ begin
 			gpio_1_adc_s1_readdata                  => mm_interconnect_0_gpio_1_adc_s1_readdata,              --                                  .readdata
 			gpio_1_adc_s1_writedata                 => mm_interconnect_0_gpio_1_adc_s1_writedata,             --                                  .writedata
 			gpio_1_adc_s1_chipselect                => mm_interconnect_0_gpio_1_adc_s1_chipselect,            --                                  .chipselect
+			gpio_2_pwm0_main_s1_address             => mm_interconnect_0_gpio_2_pwm0_main_s1_address,         --               gpio_2_pwm0_main_s1.address
+			gpio_2_pwm0_main_s1_write               => mm_interconnect_0_gpio_2_pwm0_main_s1_write,           --                                  .write
+			gpio_2_pwm0_main_s1_readdata            => mm_interconnect_0_gpio_2_pwm0_main_s1_readdata,        --                                  .readdata
+			gpio_2_pwm0_main_s1_writedata           => mm_interconnect_0_gpio_2_pwm0_main_s1_writedata,       --                                  .writedata
+			gpio_2_pwm0_main_s1_chipselect          => mm_interconnect_0_gpio_2_pwm0_main_s1_chipselect,      --                                  .chipselect
+			gpio_2_pwm0_prescaler_s1_address        => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_address,    --          gpio_2_pwm0_prescaler_s1.address
+			gpio_2_pwm0_prescaler_s1_write          => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write,      --                                  .write
+			gpio_2_pwm0_prescaler_s1_readdata       => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_readdata,   --                                  .readdata
+			gpio_2_pwm0_prescaler_s1_writedata      => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_writedata,  --                                  .writedata
+			gpio_2_pwm0_prescaler_s1_chipselect     => mm_interconnect_0_gpio_2_pwm0_prescaler_s1_chipselect, --                                  .chipselect
+			gpio_2_pwm1_main_s1_address             => mm_interconnect_0_gpio_2_pwm1_main_s1_address,         --               gpio_2_pwm1_main_s1.address
+			gpio_2_pwm1_main_s1_write               => mm_interconnect_0_gpio_2_pwm1_main_s1_write,           --                                  .write
+			gpio_2_pwm1_main_s1_readdata            => mm_interconnect_0_gpio_2_pwm1_main_s1_readdata,        --                                  .readdata
+			gpio_2_pwm1_main_s1_writedata           => mm_interconnect_0_gpio_2_pwm1_main_s1_writedata,       --                                  .writedata
+			gpio_2_pwm1_main_s1_chipselect          => mm_interconnect_0_gpio_2_pwm1_main_s1_chipselect,      --                                  .chipselect
+			gpio_2_pwm1_prescaler_s1_address        => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_address,    --          gpio_2_pwm1_prescaler_s1.address
+			gpio_2_pwm1_prescaler_s1_write          => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write,      --                                  .write
+			gpio_2_pwm1_prescaler_s1_readdata       => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_readdata,   --                                  .readdata
+			gpio_2_pwm1_prescaler_s1_writedata      => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_writedata,  --                                  .writedata
+			gpio_2_pwm1_prescaler_s1_chipselect     => mm_interconnect_0_gpio_2_pwm1_prescaler_s1_chipselect, --                                  .chipselect
 			sdram_controller_0_s1_address           => mm_interconnect_0_sdram_controller_0_s1_address,       --             sdram_controller_0_s1.address
 			sdram_controller_0_s1_write             => mm_interconnect_0_sdram_controller_0_s1_write,         --                                  .write
 			sdram_controller_0_s1_read              => mm_interconnect_0_sdram_controller_0_s1_read,          --                                  .read
@@ -721,6 +871,14 @@ begin
 	mm_interconnect_0_gpio_0_s1_write_ports_inv <= not mm_interconnect_0_gpio_0_s1_write;
 
 	mm_interconnect_0_gpio_1_adc_s1_write_ports_inv <= not mm_interconnect_0_gpio_1_adc_s1_write;
+
+	mm_interconnect_0_gpio_2_pwm0_main_s1_write_ports_inv <= not mm_interconnect_0_gpio_2_pwm0_main_s1_write;
+
+	mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write_ports_inv <= not mm_interconnect_0_gpio_2_pwm0_prescaler_s1_write;
+
+	mm_interconnect_0_gpio_2_pwm1_main_s1_write_ports_inv <= not mm_interconnect_0_gpio_2_pwm1_main_s1_write;
+
+	mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write_ports_inv <= not mm_interconnect_0_gpio_2_pwm1_prescaler_s1_write;
 
 	rst_controller_001_reset_out_reset_ports_inv <= not rst_controller_001_reset_out_reset;
 

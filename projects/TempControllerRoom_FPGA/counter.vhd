@@ -25,7 +25,7 @@ begin
 
     next_cnt <= std_logic_vector(unsigned(curr_cnt) + 1);
 
-    process(clk, rst)
+    process(clk, rst, en)
     begin
     
         if (rst = '1') then
