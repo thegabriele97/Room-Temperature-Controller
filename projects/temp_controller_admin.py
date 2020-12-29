@@ -10,6 +10,7 @@ import datetime
 import os
 from subprocess import Popen, PIPE
 import _thread as thread
+from tkintertable import TableCanvas, TableModel
 
 curr_avg_count = 4
 ser = serial.Serial()
@@ -52,6 +53,8 @@ def send_ping():
                     break
 
 def wait_ack():
+    i = 0
+
     while 1:
         ack = ser.read_until()
         print(ack)
@@ -61,6 +64,10 @@ def wait_ack():
                 return False
             else:
                 return True
+        
+        i += 1
+        if (i > 30):
+            return False
     
     return False
 
@@ -182,7 +189,8 @@ def open_serial(port):
         baudrate = 19200,
         parity = serial.PARITY_NONE,
         stopbits = serial.STOPBITS_ONE,
-        bytesize = serial.EIGHTBITS
+        bytesize = serial.EIGHTBITS,
+        timeout = 2
     )
 
     ser.isOpen()
@@ -195,6 +203,60 @@ def configure_serial():
     except Exception as e:
         ser.close()
         mbox.showerror("Error", "An error occurred while opening serial port: " + str(e))
+
+def openHistoryWindow(): 
+    newWindow = Toplevel(root) 
+    newWindow.title("Temperature History") 
+    newWindow.geometry("800x600") 
+    
+    gabriuart_send("HGET", 0, []);
+    
+    data = {"Record 0": {}}        
+    row_cnt = 0
+    col_cnt = 0
+
+    for i in range(0, 16):
+        hsen = bytes()
+        
+        while 1:
+            while 1:
+                hsen += ser.readline()
+
+                if len(hsen) > 300:
+                    hsen = bytes()
+
+                if len(hsen) == 6 + hsen[5] + 2 + 2: #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
+                    break
+
+            print(hsen)
+            if b'\x02' in hsen:
+                if b'HSEN' in hsen:
+                    break
+
+        for i in range(0, hsen[5]):
+
+            value = int(hsen[6 + i] & 0x7f) * 400.0 / 128.0 / 10.0
+            is_temp = ((hsen[6 + i] & 0x80) >> 7 == 0)
+            if not is_temp:
+                data["Record " + str(row_cnt)]["Average"] = value
+                row_cnt += 1
+                col_cnt = 0
+                data["Record " + str(row_cnt)] = {}
+                continue
+
+            data["Record " + str(row_cnt)]["Temperature " + str(col_cnt)] = value
+            col_cnt += 1
+
+    #for val in hsen:
+    #    temp = val & 0x7f;
+    #    print((val & 0x80) >> 7, ")", int(temp) * 400.0 / 128.0 / 10.0, "(", hex(val), ")")
+
+    """ data = {'rec1': {'col1': 99.88, 'col2': 108.79, 'label': 'rec1'},
+       'rec2': {'col1': 99.88, 'col2': 108.79, 'label': 'rec2'}
+       } """
+
+    table = TableCanvas(newWindow, data=data)
+    table.show()
 
 root = Tk()
 root.geometry('1200x700+200+100')
@@ -316,6 +378,9 @@ get_btn.grid(row=1, column=1)
 
 set_btn = Button(master = btnframe, height = 1, text = "Upload", command=set_btn_handler)
 set_btn.grid(row=1, column=2)
+
+Button(btnframe, height = 1, width=12, text="Retrieve History", command=openHistoryWindow).grid(column=1, row=2, sticky='') 
+
 
 connectframe = LabelFrame(root, text="Device connection", background="#ffffff")
 connectframe.grid(column=2, row=2)
