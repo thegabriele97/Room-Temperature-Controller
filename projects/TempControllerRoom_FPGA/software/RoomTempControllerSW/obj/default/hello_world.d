@@ -10,7 +10,7 @@ obj/default/hello_world.o: hello_world.c \
  c\:\users\gabri\onedrive\desktop\efes_project\projects\tempcontrollerroom_fpga\software\roomtempcontrollersw_bsp\hal\inc\sys\alt_llist.h \
  c\:\users\gabri\onedrive\desktop\efes_project\projects\tempcontrollerroom_fpga\software\roomtempcontrollersw_bsp\hal\inc\priv\alt_dev_llist.h \
  c\:\users\gabri\onedrive\desktop\efes_project\projects\tempcontrollerroom_fpga\software\roomtempcontrollersw_bsp\hal\inc\sys\alt_warning.h \
- drivers/uart.h drivers/adc.h drivers/pwm.h
+ drivers/uart.h drivers/adc.h drivers/pwm.h drivers/HistoryMemory.h
 c\:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/software/RoomTempControllerSW_bsp/system.h:
 c\:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/software/RoomTempControllerSW_bsp/linker.h:
 c\:\users\gabri\onedrive\desktop\efes_project\projects\tempcontrollerroom_fpga\software\roomtempcontrollersw_bsp\hal\inc\alt_types.h:
@@ -25,3 +25,4 @@ c\:\users\gabri\onedrive\desktop\efes_project\projects\tempcontrollerroom_fpga\s
 drivers/uart.h:
 drivers/adc.h:
 drivers/pwm.h:
+drivers/HistoryMemory.h:

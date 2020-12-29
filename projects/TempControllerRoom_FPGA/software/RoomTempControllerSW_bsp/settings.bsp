@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>27-Dec-2020 11:29:55</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1609064995225</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>28-Dec-2020 14:57:35</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1609163855692</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\software\RoomTempControllerSW_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc.sopcinfo</SopcDesignFile>
@@ -925,6 +925,18 @@
         <MemoryMap>
                 <slaveDescriptor>gpio_2_pwm1_prescaler</slaveDescriptor>
                 <addressRange>0x100000E0 - 0x100000FF</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gpio_3_mem_writeport</slaveDescriptor>
+                <addressRange>0x10000100 - 0x1000011F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gpio_3_mem_readport</slaveDescriptor>
+                <addressRange>0x10000120 - 0x1000013F</addressRange>
                 <addressSpan>32</addressSpan>
                 <attributes/>
         </MemoryMap>

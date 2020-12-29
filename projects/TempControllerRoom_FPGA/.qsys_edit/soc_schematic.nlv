@@ -1,31 +1,43 @@
 # # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
 # 
+preplace inst soc.gpio_3_mem_writeport -pg 1 -lvl 6 -y 400
 preplace inst soc.core0.reset_bridge -pg 1
 preplace inst soc.core0.clock_bridge -pg 1
-preplace inst soc.core0 -pg 1 -lvl 3 -y 80
-preplace inst soc.altpll_0 -pg 1 -lvl 5 -y 30
-preplace inst soc.sdram_controller_0 -pg 1 -lvl 4 -y 430
-preplace inst soc.clk_0 -pg 1 -lvl 4 -y 30
-preplace inst soc.uart_0 -pg 1 -lvl 4 -y 310
-preplace inst soc.gpio_1_adc -pg 1 -lvl 6 -y 140
-preplace inst soc.gpio_0 -pg 1 -lvl 4 -y 530
+preplace inst soc.core0 -pg 1 -lvl 3 -y 180
+preplace inst soc.altpll_0 -pg 1 -lvl 5 -y 130
+preplace inst soc.sdram_controller_0 -pg 1 -lvl 4 -y 560
+preplace inst soc.gpio_2_pwm0_prescaler -pg 1 -lvl 6 -y 620
+preplace inst soc.gpio_2_pwm1_prescaler -pg 1 -lvl 6 -y 740
+preplace inst soc.clk_0 -pg 1 -lvl 4 -y 130
+preplace inst soc.uart_0 -pg 1 -lvl 4 -y 420
+preplace inst soc.gpio_2_pwm0_main -pg 1 -lvl 6 -y 520
+preplace inst soc.gpio_3_mem_readport -pg 1 -lvl 6 -y 30
+preplace inst soc.gpio_1_adc -pg 1 -lvl 6 -y 300
+preplace inst soc.gpio_0 -pg 1 -lvl 4 -y 680
 preplace inst soc -pg 1 -lvl 1 -y 40 -regy -20
-preplace inst soc.timer_0 -pg 1 -lvl 4 -y 130
+preplace inst soc.timer_0 -pg 1 -lvl 4 -y 280
 preplace inst soc.core0.cpu -pg 1
-preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.sdram_controller_0_wire,(SLAVE)sdram_controller_0.wire) 1 0 4 NJ 500 NJ 500 NJ 500 NJ
-preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)core0.cpu_resetrequest_conduit,(SLAVE)soc.core0_cpu_resetrequest_conduit) 1 0 3 NJ 110 NJ 110 NJ
-preplace netloc EXPORT<net_container>soc</net_container>(MASTER)soc.pll_5khz,(MASTER)altpll_0.c0) 1 5 2 NJ 40 NJ
-preplace netloc FAN_OUT<net_container>soc</net_container>(SLAVE)gpio_0.clk,(SLAVE)timer_0.clk,(SLAVE)uart_0.clk,(SLAVE)gpio_1_adc.clk,(MASTER)altpll_0.c1,(SLAVE)core0.clk,(SLAVE)sdram_controller_0.clk) 1 2 4 450 220 940 120 NJ 160 1510
-preplace netloc POINT_TO_POINT<net_container>soc</net_container>(MASTER)clk_0.clk,(SLAVE)altpll_0.inclk_interface) 1 4 1 N
-preplace netloc FAN_OUT<net_container>soc</net_container>(MASTER)clk_0.clk_reset,(SLAVE)sdram_controller_0.reset,(SLAVE)core0.reset,(SLAVE)uart_0.reset,(SLAVE)gpio_1_adc.reset,(SLAVE)timer_0.reset,(SLAVE)gpio_0.reset,(SLAVE)altpll_0.inclk_interface_reset) 1 2 4 470 240 920 100 1250 140 1490
-preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)uart_0.external_connection,(SLAVE)soc.uart_0_external_connection) 1 0 4 NJ 340 NJ 340 NJ 340 NJ
-preplace netloc EXPORT<net_container>soc</net_container>(MASTER)altpll_0.c2,(MASTER)soc.sdram_clk) 1 5 2 NJ 80 NJ
-preplace netloc POINT_TO_POINT<net_container>soc</net_container>(MASTER)core0.debug_reset_request,(SLAVE)clk_0.clk_in_reset) 1 3 1 900
-preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.clk,(SLAVE)clk_0.clk_in) 1 0 4 NJ 40 NJ 40 NJ 40 NJ
-preplace netloc EXPORT<net_container>soc</net_container>(MASTER)soc.pll_2mhz,(MASTER)altpll_0.c3) 1 5 2 NJ 100 NJ
-preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.gpio_1_adc_external_connection,(SLAVE)gpio_1_adc.external_connection) 1 0 6 NJ 280 NJ 280 NJ 280 NJ 280 NJ 190 NJ
-preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_0.external_connection,(SLAVE)soc.gpio_0_external_connection) 1 0 4 NJ 560 NJ 560 NJ 560 NJ
-preplace netloc FAN_OUT<net_container>soc</net_container>(MASTER)core0.irq,(SLAVE)uart_0.irq,(SLAVE)timer_0.irq) 1 3 1 900
-preplace netloc INTERCONNECT<net_container>soc</net_container>(SLAVE)gpio_1_adc.s1,(SLAVE)core0.debug_mem_slave,(SLAVE)timer_0.s1,(SLAVE)sdram_controller_0.s1,(MASTER)core0.data_master,(SLAVE)uart_0.s1,(MASTER)core0.instruction_master,(SLAVE)gpio_0.s1) 1 2 4 430 260 880 300 NJ 210 N
-levelinfo -pg 1 0 200 1820
-levelinfo -hier soc 210 230 410 640 1060 1300 1580 1730
+preplace inst soc.gpio_2_pwm1_main -pg 1 -lvl 6 -y 840
+preplace netloc EXPORT<net_container>soc</net_container>(MASTER)altpll_0.c0,(MASTER)soc.pll_5khz) 1 5 2 NJ 140 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_3_mem_readport.external_connection,(SLAVE)soc.gpio_3_mem_readport_external_connection) 1 0 6 NJ 320 NJ 320 NJ 320 NJ 210 NJ 270 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_2_pwm1_main.external_connection,(SLAVE)soc.gpio_2_pwm1_main_external_connection) 1 0 6 NJ 870 NJ 870 NJ 870 NJ 870 NJ 870 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.sdram_controller_0_wire,(SLAVE)sdram_controller_0.wire) 1 0 4 NJ 630 NJ 630 NJ 630 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_2_pwm0_prescaler.external_connection,(SLAVE)soc.gpio_2_pwm0_prescaler_external_connection) 1 0 6 NJ 670 NJ 670 NJ 670 NJ 670 NJ 650 NJ
+preplace netloc POINT_TO_POINT<net_container>soc</net_container>(SLAVE)altpll_0.inclk_interface,(MASTER)clk_0.clk) 1 4 1 N
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_1_adc.external_connection,(SLAVE)soc.gpio_1_adc_external_connection) 1 0 6 NJ 420 NJ 420 NJ 420 NJ 390 NJ 330 NJ
+preplace netloc FAN_OUT<net_container>soc</net_container>(SLAVE)timer_0.irq,(MASTER)core0.irq,(SLAVE)uart_0.irq) 1 3 1 880
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_2_pwm0_main.external_connection,(SLAVE)soc.gpio_2_pwm0_main_external_connection) 1 0 6 NJ 550 NJ 550 NJ 550 NJ 550 NJ 550 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.core0_cpu_resetrequest_conduit,(SLAVE)core0.cpu_resetrequest_conduit) 1 0 3 NJ 210 NJ 210 NJ
+preplace netloc FAN_OUT<net_container>soc</net_container>(SLAVE)gpio_2_pwm1_prescaler.clk,(SLAVE)gpio_0.clk,(SLAVE)gpio_1_adc.clk,(SLAVE)gpio_3_mem_writeport.clk,(SLAVE)timer_0.clk,(MASTER)altpll_0.c1,(SLAVE)sdram_controller_0.clk,(SLAVE)core0.clk,(SLAVE)gpio_3_mem_readport.clk,(SLAVE)gpio_2_pwm1_main.clk,(SLAVE)gpio_2_pwm0_main.clk,(SLAVE)gpio_2_pwm0_prescaler.clk,(SLAVE)uart_0.clk) 1 2 4 450 340 900 230 NJ 290 1550
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)uart_0.external_connection,(SLAVE)soc.uart_0_external_connection) 1 0 4 NJ 450 NJ 450 NJ 450 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(MASTER)altpll_0.c2,(MASTER)soc.sdram_clk) 1 5 2 NJ 180 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_2_pwm1_prescaler.external_connection,(SLAVE)soc.gpio_2_pwm1_prescaler_external_connection) 1 0 6 NJ 790 NJ 790 NJ 790 NJ 790 NJ 770 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)gpio_3_mem_writeport.external_connection,(SLAVE)soc.gpio_3_mem_writeport_external_connection) 1 0 6 NJ 400 NJ 400 NJ 400 NJ 410 NJ 430 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.clk,(SLAVE)clk_0.clk_in) 1 0 4 NJ 140 NJ 140 NJ 140 NJ
+preplace netloc EXPORT<net_container>soc</net_container>(MASTER)altpll_0.c3,(MASTER)soc.pll_2mhz) 1 5 2 NJ 210 NJ
+preplace netloc POINT_TO_POINT<net_container>soc</net_container>(SLAVE)clk_0.clk_in_reset,(MASTER)core0.debug_reset_request) 1 3 1 880
+preplace netloc FAN_OUT<net_container>soc</net_container>(SLAVE)gpio_2_pwm0_main.reset,(SLAVE)uart_0.reset,(MASTER)clk_0.clk_reset,(SLAVE)sdram_controller_0.reset,(SLAVE)gpio_2_pwm1_main.reset,(SLAVE)timer_0.reset,(SLAVE)gpio_2_pwm1_prescaler.reset,(SLAVE)core0.reset,(SLAVE)altpll_0.inclk_interface_reset,(SLAVE)gpio_2_pwm0_prescaler.reset,(SLAVE)gpio_3_mem_readport.reset,(SLAVE)gpio_0.reset,(SLAVE)gpio_1_adc.reset,(SLAVE)gpio_3_mem_writeport.reset) 1 2 4 470 360 980 250 1230 250 1570
+preplace netloc EXPORT<net_container>soc</net_container>(SLAVE)soc.gpio_0_external_connection,(SLAVE)gpio_0.external_connection) 1 0 4 NJ 710 NJ 710 NJ 710 NJ
+preplace netloc INTERCONNECT<net_container>soc</net_container>(MASTER)core0.data_master,(SLAVE)gpio_3_mem_writeport.s1,(SLAVE)gpio_2_pwm0_prescaler.s1,(SLAVE)uart_0.s1,(SLAVE)sdram_controller_0.s1,(SLAVE)gpio_1_adc.s1,(SLAVE)gpio_3_mem_readport.s1,(MASTER)core0.instruction_master,(SLAVE)gpio_2_pwm0_main.s1,(SLAVE)timer_0.s1,(SLAVE)gpio_0.s1,(SLAVE)gpio_2_pwm1_prescaler.s1,(SLAVE)gpio_2_pwm1_main.s1,(SLAVE)core0.debug_mem_slave) 1 2 4 430 380 920 270 NJ 310 1510
+levelinfo -pg 1 0 200 1850
+levelinfo -hier soc 210 230 410 640 1060 1300 1600 1760

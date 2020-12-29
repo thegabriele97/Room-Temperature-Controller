@@ -87,6 +87,18 @@ architecture mixture of TempControllerRoom is
 			  pwm_out: out std_logic
 		 );
 	end component;
+	
+	component HistoryMemory IS
+		PORT(
+			aclr		: IN STD_LOGIC  := '0';
+			clock		: IN STD_LOGIC  := '1';
+			data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+			rdaddress		: IN STD_LOGIC_VECTOR (10 DOWNTO 0);
+			wraddress		: IN STD_LOGIC_VECTOR (10 DOWNTO 0);
+			wren		: IN STD_LOGIC  := '0';
+			q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		);
+	end component;
 
     component soc is
         port (
@@ -115,7 +127,10 @@ architecture mixture of TempControllerRoom is
             gpio_2_pwm0_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- export
             gpio_2_pwm1_main_external_connection_in_port     : in    std_logic_vector(13 downto 0) := (others => 'X'); -- in_port
             gpio_2_pwm1_main_external_connection_out_port    : out   std_logic_vector(13 downto 0);                    -- out_port
-            gpio_2_pwm1_prescaler_external_connection_export : out   std_logic_vector(31 downto 0)                     -- export
+            gpio_2_pwm1_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- export
+				gpio_3_mem_writeport_external_connection_export  : out   std_logic_vector(19 downto 0);                    -- export
+            gpio_3_mem_readport_external_connection_in_port  : in    std_logic_vector(19 downto 0) := (others => 'X'); -- in_port
+            gpio_3_mem_readport_external_connection_out_port : out   std_logic_vector(19 downto 0)                     -- out_port
 		  );
     end component soc;
 
@@ -133,6 +148,11 @@ architecture mixture of TempControllerRoom is
 	
 	signal igpio2_pwm0_main_in, igpio2_pwm0_main_out, igpio2_pwm1_main_in, igpio2_pwm1_main_out: std_logic_vector(13 downto 0);
 	signal igpio2_pwm0_prescaler, igpio2_pwm1_prescaler: std_logic_vector(31 downto 0);
+	
+	signal igpio3_wrport, igpio3_rdport_in, igpio3_rdport_out: std_logic_vector(19 downto 0);		
+																									-- 	 0: wren   / reserved
+																									--	[1-8]: wrdata / rddata	 
+																									--[9-19]: wraddr / rdaddr
 	
 	signal curr_cnt, next_cnt: std_logic_vector(31 downto 0);
 	
@@ -172,7 +192,11 @@ begin
             gpio_2_pwm0_prescaler_external_connection_export => igpio2_pwm0_prescaler,
             gpio_2_pwm1_main_external_connection_in_port    => igpio2_pwm1_main_in,
             gpio_2_pwm1_main_external_connection_out_port   => igpio2_pwm1_main_out,
-            gpio_2_pwm1_prescaler_external_connection_export => igpio2_pwm1_prescaler
+            gpio_2_pwm1_prescaler_external_connection_export => igpio2_pwm1_prescaler,
+				
+				gpio_3_mem_writeport_external_connection_export => igpio3_wrport,
+				gpio_3_mem_readport_external_connection_in_port => igpio3_rdport_in,
+				gpio_3_mem_readport_external_connection_out_port => igpio3_rdport_out
         );
 
 	ADC0:	SAR generic map(7, 3) 
@@ -211,7 +235,19 @@ begin
 				done_duty => igpio2_pwm1_main_in(3),
 				pwm_out => pwm1
 			);
-		
+			
+	HistoryMem0: HistoryMemory
+			port map(
+				aclr => rst,
+				clock => clk_2mhz,
+				data => igpio3_wrport(8 downto 1),
+				wraddress => igpio3_wrport(19 downto 9),
+				wren => igpio3_wrport(0),
+				q => igpio3_rdport_in(8 downto 1),
+				rdaddress => igpio3_rdport_out(19 downto 9)
+			);
+	
+	
 	rst <= not rst_n;
 	gpio0 <= not igpio0;
 	

@@ -93,6 +93,7 @@ C_SRCS += hello_world.c
 C_SRCS += drivers/uart.c
 C_SRCS += drivers/adc.c
 C_SRCS += drivers/pwm.c
+C_SRCS += drivers/HistoryMemory.c
 CXX_SRCS :=
 ASM_SRCS :=
 
