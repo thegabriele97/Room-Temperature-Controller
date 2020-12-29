@@ -14,6 +14,8 @@ from tkintertable import TableCanvas, TableModel
 
 curr_avg_count = 4
 ser = serial.Serial()
+is_connected = False
+temp_read_cnt = 0
 
 def gabriuart_checksum(crc: int):
     crc ^= (crc >> 16)
@@ -53,22 +55,17 @@ def send_ping():
                     break
 
 def wait_ack():
-    i = 0
 
     while 1:
         ack = ser.read_until()
-        print(ack)
         if b'\x02' in ack and not (b'CURR' in ack or b'CAVG' in ack or b'PONG' in ack):
+            print(ack)
             if not b'\x06' in ack:
                 print("Ack not received. Closing...")
                 return False
             else:
                 return True
         
-        i += 1
-        if (i > 30):
-            return False
-    
     return False
 
 def gabriuart_send(cmd: str, length: int, data: list):
@@ -82,7 +79,8 @@ def gabriuart_send(cmd: str, length: int, data: list):
     for byte in bytes_arr:
         ser.write(byte)
 
-    wait_ack()
+    if cmd != "LIVE":
+        wait_ack()
 
 def reconstruct_int32(data: list, index: int):
     return data[index] << 24 | data[index-1] << 16 | data[index-2] << 8 | data[index-3]
@@ -92,9 +90,10 @@ def reconstruct_int16(data: list, index: int):
 
 def get_btn_handler():
     gabriuart_send("CGET", 0, [])
-    csen = bytes()
 
     while 1:
+        csen = bytes()
+
         while 1:
             csen += ser.readline()
 
@@ -103,7 +102,7 @@ def get_btn_handler():
 
         print(csen)
         if b'\x02' in csen:
-            if csen.find(b'CSEN'):
+            if b'CSEN' in csen:
                 break
 
     sample_freq_entry.delete(0, END)
@@ -182,24 +181,31 @@ def create_line_th1(plot, val: float):
 def create_line_th2(plot, val: float):
     return plot.axhline(y=val, color='y', linestyle=':', label="Threshold 2")
 
-def open_serial(port):
+def open_serial(port, nbits, br):
     global ser
+
     ser = serial.Serial(
         port = port,
-        baudrate = 19200,
+        baudrate = br,
         parity = serial.PARITY_NONE,
         stopbits = serial.STOPBITS_ONE,
-        bytesize = serial.EIGHTBITS,
-        timeout = 2
+        bytesize = nbits
     )
 
     ser.isOpen()
 
 def configure_serial():
+    global is_connected
+    global nbits
+    global br_entry
+    global serial_port_entry
+    
     try:
-        open_serial(serial_port_entry.get())
+        open_serial(serial_port_entry.get(), int(nbits.get()[0]), int(br_entry.get()))
         send_ping()
         get_btn_handler()
+
+        is_connected = True
     except Exception as e:
         ser.close()
         mbox.showerror("Error", "An error occurred while opening serial port: " + str(e))
@@ -216,14 +222,12 @@ def openHistoryWindow():
     col_cnt = 0
 
     for i in range(0, 16):
-        hsen = bytes()
         
         while 1:
+            hsen = bytes()
+
             while 1:
                 hsen += ser.readline()
-
-                if len(hsen) > 300:
-                    hsen = bytes()
 
                 if len(hsen) == 6 + hsen[5] + 2 + 2: #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
                     break
@@ -235,7 +239,7 @@ def openHistoryWindow():
 
         for i in range(0, hsen[5]):
 
-            value = int(hsen[6 + i] & 0x7f) * 400.0 / 128.0 / 10.0
+            value = float("{:.2f}".format(int(hsen[6 + i] & 0x7f) * 400.0 / 128.0 / 10.0))
             is_temp = ((hsen[6 + i] & 0x80) >> 7 == 0)
             if not is_temp:
                 data["Record " + str(row_cnt)]["Average"] = value
@@ -246,14 +250,6 @@ def openHistoryWindow():
 
             data["Record " + str(row_cnt)]["Temperature " + str(col_cnt)] = value
             col_cnt += 1
-
-    #for val in hsen:
-    #    temp = val & 0x7f;
-    #    print((val & 0x80) >> 7, ")", int(temp) * 400.0 / 128.0 / 10.0, "(", hex(val), ")")
-
-    """ data = {'rec1': {'col1': 99.88, 'col2': 108.79, 'label': 'rec1'},
-       'rec2': {'col1': 99.88, 'col2': 108.79, 'label': 'rec2'}
-       } """
 
     table = TableCanvas(newWindow, data=data)
     table.show()
@@ -304,13 +300,13 @@ L2.grid(column=1, row=1)
 th0 = Entry(th0frame, width=6)
 th0.grid(column=2, row=1)
 
-L2 = Label(th0frame, text="Duty Cycle M0 (300-1023):", background="#ffffff")
+L2 = Label(th0frame, text="Motor Speed M0 (200-1023):", background="#ffffff")
 L2.grid(column=1, row=2)
 
 m0_th0 = Entry(th0frame, width=6)
 m0_th0.grid(column=2, row=2)
 
-L2 = Label(th0frame, text="Duty Cycle M1 (300-1023):", background="#ffffff")
+L2 = Label(th0frame, text="Motor Speed M1 (200-1023):", background="#ffffff")
 L2.grid(column=1, row=3)
 
 m1_th0 = Entry(th0frame, width=6)
@@ -329,13 +325,13 @@ L2.grid(column=1, row=1)
 th1 = Entry(th1frame, width=6)
 th1.grid(column=2, row=1)
 
-L2 = Label(th1frame, text="Duty Cycle M0 (300-1023):", background="#ffffff")
+L2 = Label(th1frame, text="Motor Speed M0 (200-1023):", background="#ffffff")
 L2.grid(column=1, row=2)
 
 m0_th1 = Entry(th1frame, width=6)
 m0_th1.grid(column=2, row=2)
 
-L2 = Label(th1frame, text="Duty Cycle M1 (300-1023):", background="#ffffff")
+L2 = Label(th1frame, text="Motor Speed M1 (200-1023):", background="#ffffff")
 L2.grid(column=1, row=3)
 
 m1_th1 = Entry(th1frame, width=6)
@@ -354,13 +350,13 @@ L2.grid(column=1, row=1)
 th2 = Entry(th2frame, width=6)
 th2.grid(column=2, row=1)
 
-L2 = Label(th2frame, text="Duty Cycle M0 (300-1023):", background="#ffffff")
+L2 = Label(th2frame, text="Motor Speed M0 (200-1023):", background="#ffffff")
 L2.grid(column=1, row=2)
 
 m0_th2 = Entry(th2frame, width=6)
 m0_th2.grid(column=2, row=2)
 
-L2 = Label(th2frame, text="Duty Cycle M1 (300-1023):", background="#ffffff")
+L2 = Label(th2frame, text="Motor Speed M1 (200-1023):", background="#ffffff")
 L2.grid(column=1, row=3)
 
 m1_th2 = Entry(th2frame, width=6)
@@ -391,8 +387,17 @@ L1.grid(column=1, row=1)
 serial_port_entry = Entry(connectframe, width=20)
 serial_port_entry.grid(column=2, row=1)
 
+Label(connectframe, text="Baud Rate").grid(column=1, row=2)
+br_entry = Entry(connectframe, width=10)
+br_entry.grid(column=2, row=2)
+
+Label(connectframe, text="Number of bits").grid(column=1, row=3)
+connectframe.grid_columnconfigure(1, weight=1)
+nbits = StringVar(connectframe, "8 bits") 
+OptionMenu(connectframe, nbits, "5 bits", "6 bits", "7 bits", "8 bits").grid(column=2, row=3)
+
 connect_btn = Button(master = connectframe, height = 1, width = 10, text = "Connect", command=configure_serial)
-connect_btn.grid(row=2, column=1)
+connect_btn.grid(row=4, column=1)
 
 xar = []
 yar = []
@@ -420,6 +425,8 @@ plt.gcf().autofmt_xdate()
 leg = plt.legend()
 
 def animate_th(th_name, i):
+    global temp_read_cnt
+
     temp = ser.read_until()
     print(temp)
 
@@ -431,6 +438,7 @@ def animate_th(th_name, i):
     log.config(state=DISABLED)
 
     if b"CURR" in temp:
+        temp_read_cnt += 1
         temp = temp[6]
 
         yar.append(temp * 400.0 / 128.0 / 10.0)
@@ -439,6 +447,7 @@ def animate_th(th_name, i):
         ax1.set_xlim(i-500, i+1)
 
     elif b"CAVG" in temp:
+        temp_read_cnt += 1
         temp = temp[9] << 24 | temp[8] << 16 | temp[7] << 8 | temp[6];
 
         yar2.append((float(temp) / curr_avg_count) * 400.0 / 128.0 / 10.0);
@@ -453,12 +462,19 @@ def animate_th(th_name, i):
     ann_list.append(ann)
 
 def animate(i):
+    global is_connected
+    global temp_read_cnt
 
-    if not ser.is_open:
+    if not ser.is_open or not is_connected:
         return
 
     #t1 = thread.start_new_thread(animate_th, ("thread_animate", i))
     #t1.wait()
+
+    if (temp_read_cnt > 1):
+        gabriuart_send("LIVE", 0, [])
+        temp_read_cnt = 0
+
     animate_th("", i)
 
 plotcanvas = FigureCanvasTkAgg(fig, root)

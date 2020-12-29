@@ -23,7 +23,8 @@ enum {
 	PING = 0x474e4950,
 	CSET = 0x54455343,
 	CGET = 0x54454743,
-	HGET = 0x54454748
+	HGET = 0x54454748,
+	LIVE = 0x4556494c
 } cmd_e;
 
 typedef enum { false, true } bool;
@@ -49,6 +50,7 @@ static unsigned int avg_each_count = 4;
 static ths_t th0, th1, th2;
 static unsigned int history_address = 0x0;
 static unsigned int retrieve_history_address = 0x0;
+static unsigned int lost_acks = 0;
 
 int main() {
 	int *gpio_base_ptr = GPIO_0_BASE;
@@ -57,7 +59,6 @@ int main() {
 	int start, avg_sum = 0;
 	float avg_temp;
 	adc_t adc0;
-
 
 	th0.value = 32;		//10 °C
 	th0.duty0 = 0;
@@ -78,8 +79,8 @@ int main() {
 	pwm_set_dutycycle(pwm1, th1.duty1);
 
 	uart0 = uart_begin(UART_0_BASE, BR_CALC(UART_0_FREQ, 19200));
-	uprintf(uart0, "Hellooooooo maaaan!\r\n");
-	uprintf(uart0, " :> %d\r\n", uart0->divisor);
+	uprintf(uart0, "Hello World!\r\n");
+	uprintf(uart0, "If you can read this, means that your baud rate is set correctly! :> %d\r\n", uart0->divisor);
 
 	uart_register_irq(uart0, _ISR_uart0, NULL);
 	uart0->control.fields.irrdy = 1;
@@ -91,8 +92,13 @@ int main() {
 
 	do {
 		//uprintf(uart0, "Temp: %.1f °C\r\n", (adc_start_get(adc0) * 400.0) / 128.0 / 10);
+		*(gpio_base_ptr + 0) |= (1 << 0);	// Activating on-board led 3
 		data[0] = (adc_start_get(adc0) & 0xff);
-		gabriuart_send("CURR", 1, data);
+
+		if (lost_acks <= 50) {
+			gabriuart_send("CURR", 1, data);
+			lost_acks++;
+		}
 
 		historymem_write(history0, history0_addr_get_update(), HISTORY_WR_TEMP(data[0]));
 
@@ -100,23 +106,29 @@ int main() {
 		avg_cnt++;
 
 		if (avg_cnt >= avg_each_count) {
-			start = 0;
-			data[start++] = ((avg_sum >> 0x00) & 0xff);
-			data[start++] = ((avg_sum >> 0x08) & 0xff);
-			data[start++] = ((avg_sum >> 0x16) & 0xff);
-			data[start++] = ((avg_sum >> 0x18) & 0xff);
-			gabriuart_send("CAVG", 4, data);
+
+			if (lost_acks <= 50) {
+				start = 0;
+				data[start++] = ((avg_sum >> 0x00) & 0xff);
+				data[start++] = ((avg_sum >> 0x08) & 0xff);
+				data[start++] = ((avg_sum >> 0x16) & 0xff);
+				data[start++] = ((avg_sum >> 0x18) & 0xff);
+				gabriuart_send("CAVG", 4, data);
+			}
 
 			avg_temp = avg_sum / (float)avg_cnt;
 			if (avg_temp > th2.value) {
 				pwm_set_dutycycle(pwm0, th2.duty0);
 				pwm_set_dutycycle(pwm1, th2.duty1);
+				*(gpio_base_ptr + 0) = (1 << 1);	// Activating on-board led 0
 			} else if (avg_temp > th1.value) {
 				pwm_set_dutycycle(pwm0, th1.duty0);
 				pwm_set_dutycycle(pwm1, th1.duty1);
+				*(gpio_base_ptr + 0) = (1 << 2);	// Activating on-board led 1
 			} else if (avg_temp > th0.value) {
 				pwm_set_dutycycle(pwm0, th0.duty0);
 				pwm_set_dutycycle(pwm1, th0.duty1);
+				*(gpio_base_ptr + 0) = (1 << 3);	// Activating on-board led 2
 			}
 
 			historymem_write(history0, history0_addr_get_update(), HISTORY_WR_AVG((int)(avg_temp)));
@@ -128,11 +140,8 @@ int main() {
 		wait_for = TIMER_INTERVAL(sampling_period_ms, alt_timestamp_freq());
 		start = alt_timestamp_start();
 		while(alt_timestamp() - start < wait_for);
-	} while(1);
 
-	do {
-		*(gpio_base_ptr + 0) = 0x0;
-		*(gpio_base_ptr + 0) = 0xf;
+		*(gpio_base_ptr + 0) &= ~(1 << 0);	// Deactivating on-board led 3
 	} while(1);
 
 	return 0;
@@ -193,6 +202,8 @@ void _ISR_uart0(void *context, alt_u32 id) {
 			case PING:
 				buffer[buffer_post] = ~buffer[i+6];
 				gabriuart_send("PONG", 0x1, (alt_u8 *)(buffer + buffer_post));
+
+				lost_acks = 0; // A PING means that a client is connected, so I start again to sent data
 				break;
 
 			case CSET:
@@ -279,6 +290,11 @@ void _ISR_uart0(void *context, alt_u32 id) {
 					while(alt_timestamp() - j < INTERHISTORY_SEND_PAUSE); // A little pause to not flood the serial, maybe the client is too slow to read
 				}
 
+				break;
+
+			case LIVE:
+				// If a client sends this, it means that it's still alive. It has to send it periodically
+				lost_acks = 0;
 				break;
 			}
 		}
