@@ -24,13 +24,8 @@ void pwm_set_prescaler(pwm_t pwm, int divisor) {
 }
 
 void pwm_set_dutycycle(pwm_t pwm, int dutycycle) {
-	alt_u8 i;
-
-	for (i = 0; i < 3; i++) {
-		pwm.pwm_config->control.reg = (dutycycle << 4) | (1 << 2);
-		while(pwm.pwm_config->control.fields.done_duty != 0);
-		while(pwm.pwm_config->control.fields.done_duty != 1);
-		//pwm.pwm_config->control.fields.load_duty = 0;
-	}
-
+	pwm.pwm_config->control.reg = (dutycycle << 4) | (1 << 2);
+	while(pwm.pwm_config->control.fields.done_duty != 0);
+	while(pwm.pwm_config->control.fields.done_duty != 1);
+	//pwm.pwm_config->control.fields.load_duty = 0;
 }

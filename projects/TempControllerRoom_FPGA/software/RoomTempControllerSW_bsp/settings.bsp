@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>29-Dec-2020 11:06:54</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1609236414996</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>08-Jan-2021 17:38:55</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1610123936027</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\software\RoomTempControllerSW_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>C:\Users\gabri\OneDrive\Desktop\EFES_Project\projects\TempControllerRoom_FPGA\soc.sopcinfo</SopcDesignFile>

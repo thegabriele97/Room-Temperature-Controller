@@ -194,7 +194,7 @@ void _ISR_uart0(void *context, alt_u32 id) {
 
 		//sending ack or nack based on checksum check
 		is_check_ok = (checksum_val == (alt_u8)buffer[buffer_post - 2]);
-		uprintf(uart0, "\x2%c\x1d\x1d\x1d\x3\r\n", (is_check_ok) ? '\x06' : '\x0f');
+		uprintf(uart0, "\x2%c\x1\x1\x1\x3\r\n", (is_check_ok) ? '\x06' : '\x0f');
 
 		if (is_check_ok) {
 			i = gabriuart_cmd2_u32(buffer + 1);
@@ -326,85 +326,6 @@ void gabriuart_send(char *cmd, alt_u8 length, alt_u8 *data) {
 
 	uprintf(uart0, "%c\x3\r\n", checksum);
 }
-
-/*void _ISR_uart0(void *context, alt_u32 id) {
-	static bool is_stx = false;
-	static bool is_cmd = false;
-	static bool is_length = false;
-	static bool is_data = false;
-	static bool is_checksum = false;
-	static bool is_frame_ready = false;
-
-	static int ch, length;
-	static alt_u8 checksum;
-	static cmd[gabriuart_cmd_size];
-
-	static char sent_data[gabriuart_data_array_size];
-	static int data_pos = 0;
-
-	static int failed_attempts_etx = 0;
-
-	alt_u8 data, i, checksum_val;
-
-	ch = ugetc(uart0);
-	if (is_frame_ready) {
-
-		checksum_val = gabriuart_checksum((alt_u32)cmd);
-		for (i = 0; i < data_pos; i++) {
-			checksum_val += gabriuart_checksum(sent_data[i]);
-		}
-		checksum_val &= 0x7f;
-
-		//sending ack or nack based on checksum check
-		uprintf(uart0, "%c\n", (checksum_val == checksum) ? '\x06' : '\x0f');
-
-		if (strcmp(cmd, "PING")) {
-			data = ~sent_data[0];
-			uprintf(uart0, "\x02\nPONG\n\1\n%d\n%d\n\x03\n", data, gabriuart_checksum(data));
-		}
-
-		data_pos = 0;
-	} else if (!is_stx && ch == '\x02') {
-		is_stx = true;
-	} else if (is_stx) {
-		cmd[0] = ch;
-		cmd[4] = '\0';
-		for (i = 1; i < 4; i++) {
-			cmd[i] = ugetc(uart0);
-		}
-
-		is_stx = false;
-		is_cmd = true;
-	} else if (is_cmd) {
-		length = ch;
-
-		is_cmd = false;
-		is_length = true;
-	} else if (is_length) {
-		sent_data[data_pos++] = ch;
-
-		is_length = (!(strcmp(cmd, "READ") == 0) || (data_pos >= length));
-		is_data = !is_length;
-	} else if (is_data) {
-		checksum = ch;
-
-		is_data = false;
-		is_checksum = true;
-	} else if (is_checksum) {
-		if (ch == '\x03') {
-			is_checksum = false;
-			is_frame_ready = true;
-		}
-
-		failed_attempts_etx += (ch == '\x03') ? 1 : -failed_attempts_etx;
-	} else {
-		while ((((*((int *)UART_0_BASE + 2)) >> 6) & 0x1) != 1);
-		*((int *)UART_0_BASE + 1) = (ch & 0xff);
-	}
-
-	//Ack irq
-	*((int *)UART_0_BASE + 2) = 0;
-}*/
 
 alt_u8 gabriuart_checksum(alt_u32 crc) {
 	crc ^= crc >> 16;

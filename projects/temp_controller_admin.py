@@ -13,6 +13,7 @@ import _thread as thread
 from tkintertable import TableCanvas, TableModel
 
 curr_avg_count = 4
+curr_sampling_period = 1000;
 ser = serial.Serial()
 is_connected = False
 temp_read_cnt = 0
@@ -97,8 +98,15 @@ def get_btn_handler():
         while 1:
             csen += ser.readline()
 
-            if len(csen) == 6 + csen[5] + 2 + 2: #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
-                break
+            try:
+                if (len(csen) == 6 + csen[5] + 2 + 2 or (b'\x06' in csen or b'\x0f' in csen)): #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
+                    break
+            except:
+                    break
+
+            if len(csen) > 50:    # something bad happened.. trying again from 0
+                get_btn_handler()
+                return
 
         print(csen)
         if b'\x02' in csen:
@@ -113,6 +121,9 @@ def get_btn_handler():
 
     global curr_avg_count
     curr_avg_count = csen[10]
+
+    global curr_sampling_period;
+    curr_sampling_period = reconstruct_int32(csen, 9)
 
     th0.delete(0, END)
     th0.insert(0, csen[11] * 400 / 128 / 10);
@@ -211,11 +222,7 @@ def configure_serial():
         mbox.showerror("Error", "An error occurred while opening serial port: " + str(e))
 
 def openHistoryWindow(): 
-    newWindow = Toplevel(root) 
-    newWindow.title("Temperature History") 
-    newWindow.geometry("800x600") 
-    
-    gabriuart_send("HGET", 0, []);
+    gabriuart_send("HGET", 0, [])
     
     data = {"Record 0": {}}        
     row_cnt = 0
@@ -229,8 +236,15 @@ def openHistoryWindow():
             while 1:
                 hsen += ser.readline()
 
-                if len(hsen) == 6 + hsen[5] + 2 + 2: #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
+                try:
+                    if (len(hsen) == 6 + hsen[5] + 2 + 2) or (b'\x06' in hsen or b'\x0f' in hsen): #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
+                        break
+                except:
                     break
+
+                if len(hsen) > 50:    # something bad happened.. trying again from 0
+                    openHistoryWindow()
+                    return
 
             print(hsen)
             if b'\x02' in hsen:
@@ -251,6 +265,9 @@ def openHistoryWindow():
             data["Record " + str(row_cnt)]["Temperature " + str(col_cnt)] = value
             col_cnt += 1
 
+    newWindow = Toplevel(root) 
+    newWindow.title("Temperature History") 
+    newWindow.geometry("800x600") 
     table = TableCanvas(newWindow, data=data)
     table.show()
 
@@ -427,6 +444,7 @@ leg = plt.legend()
 def animate_th(th_name, i):
     global temp_read_cnt
 
+    print("So.. ", end='')
     temp = ser.read_until()
     print(temp)
 
@@ -436,6 +454,13 @@ def animate_th(th_name, i):
     log.insert(END, '\n')
     log.see("end")
     log.config(state=DISABLED)
+
+    """     checksum = gabriuart_checksum(reconstruct_int32(temp, 4))
+    for s_data in temp[5:(len(temp)-5)]:
+        checksum += gabriuart_checksum(s_data)
+
+    checksum &= 0x7f 
+    """
 
     if b"CURR" in temp:
         temp_read_cnt += 1
@@ -479,6 +504,6 @@ def animate(i):
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1, sticky=NSEW)
-ani = animation.FuncAnimation(fig, animate, interval=100, blit=False)
+ani = animation.FuncAnimation(fig, animate, interval=(curr_sampling_period / 4), blit=False)
 
 root.mainloop()
