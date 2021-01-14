@@ -44,7 +44,7 @@ module soc (
 	output	[31:0]	gpio_2_pwm1_prescaler_external_connection_export;
 	input	[19:0]	gpio_3_mem_readport_external_connection_in_port;
 	output	[19:0]	gpio_3_mem_readport_external_connection_out_port;
-	output	[19:0]	gpio_3_mem_writeport_external_connection_export;
+	inout	[19:0]	gpio_3_mem_writeport_external_connection_export;
 	output		pll_2mhz_clk;
 	output		pll_5khz_clk;
 	output		sdram_clk_clk;

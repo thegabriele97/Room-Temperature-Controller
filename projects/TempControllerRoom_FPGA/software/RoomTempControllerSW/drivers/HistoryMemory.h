@@ -25,6 +25,16 @@ typedef struct {
 
 			alt_u32 reg;
 		} control;
+		union {
+			struct {
+				unsigned wren 		: 1;
+				unsigned wrdata		: 8;
+				unsigned wraddr		: 11;
+				unsigned reserved	: 12;
+			} fields;
+
+			alt_u32 reg;
+		} gpio_direction;
 	} *write_port;
 
 	struct {

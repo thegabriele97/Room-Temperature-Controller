@@ -14,10 +14,12 @@
 #define gabriuart_data_array_size	0xff
 #define MAX_HISTORY_ADDRESS			0x7ff
 #define INTERHISTORY_SEND_PAUSE		0xf4240
+#define FLOAT_PRECISION				0.992	// <- same precision offered by the ADC (3.1 mV) that is 1 LSB
 
 #define TIMER_INTERVAL(period, freq) (period * (freq / 1000))
 #define HISTORY_WR_TEMP(temp)		 ((0 << 7) | (temp & 0x7f))
 #define HISTORY_WR_AVG(temp)		 ((1 << 7) | (temp & 0x7f))
+#define FLOAT_GT(f1, f2)			 (((f1) - (f2)) > (FLOAT_PRECISION))
 
 enum {
 	PING = 0x474e4950,
@@ -117,15 +119,15 @@ int main() {
 			}
 
 			avg_temp = avg_sum / (float)avg_cnt;
-			if (avg_temp > th2.value) {
+			if (FLOAT_GT(avg_temp, th2.value)) {
 				pwm_set_dutycycle(pwm0, th2.duty0);
 				pwm_set_dutycycle(pwm1, th2.duty1);
 				*(gpio_base_ptr + 0) = (1 << 1);	// Activating on-board led 0
-			} else if (avg_temp > th1.value) {
+			} else if (FLOAT_GT(avg_temp, th1.value)) {
 				pwm_set_dutycycle(pwm0, th1.duty0);
 				pwm_set_dutycycle(pwm1, th1.duty1);
 				*(gpio_base_ptr + 0) = (1 << 2);	// Activating on-board led 1
-			} else if (avg_temp > th0.value) {
+			} else if (FLOAT_GT(avg_temp, th0.value)) {
 				pwm_set_dutycycle(pwm0, th0.duty0);
 				pwm_set_dutycycle(pwm1, th0.duty1);
 				*(gpio_base_ptr + 0) = (1 << 3);	// Activating on-board led 2
@@ -137,11 +139,11 @@ int main() {
 			avg_sum = 0;
 		}
 
+		*(gpio_base_ptr + 0) &= ~(1 << 0);	// Deactivating on-board led 3
+
 		wait_for = TIMER_INTERVAL(sampling_period_ms, alt_timestamp_freq());
 		start = alt_timestamp_start();
 		while(alt_timestamp() - start < wait_for);
-
-		*(gpio_base_ptr + 0) &= ~(1 << 0);	// Deactivating on-board led 3
 	} while(1);
 
 	return 0;

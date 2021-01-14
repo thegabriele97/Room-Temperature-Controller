@@ -128,14 +128,15 @@ architecture mixture of TempControllerRoom is
             gpio_2_pwm1_main_external_connection_in_port     : in    std_logic_vector(13 downto 0) := (others => 'X'); -- in_port
             gpio_2_pwm1_main_external_connection_out_port    : out   std_logic_vector(13 downto 0);                    -- out_port
             gpio_2_pwm1_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- export
-				gpio_3_mem_writeport_external_connection_export  : out   std_logic_vector(19 downto 0);                    -- export
+				gpio_3_mem_writeport_external_connection_export  : inout std_logic_vector(19 downto 0) := (others => 'X');                    -- export
             gpio_3_mem_readport_external_connection_in_port  : in    std_logic_vector(19 downto 0) := (others => 'X'); -- in_port
             gpio_3_mem_readport_external_connection_out_port : out   std_logic_vector(19 downto 0)                     -- out_port
 		  );
     end component soc;
 
 	for ADC0: SAR use entity work.SAR(hlsm2);
-	
+	for PWM0_dev: pwm use entity work.pwm(structural);
+	for PWM1_dev: pwm use entity work.pwm(structural);
 	 
 	signal clk_1hz, clk_5khz, clk_2mhz: std_logic;
 	signal rst: std_logic;
@@ -155,8 +156,6 @@ architecture mixture of TempControllerRoom is
 																									--[9-19]: wraddr / rdaddr
 	
 	signal curr_cnt, next_cnt: std_logic_vector(31 downto 0);
-	
-	signal done_div, done_d: std_logic;
 	
 begin
 
@@ -201,7 +200,7 @@ begin
 
 	ADC0:	SAR generic map(7, 3) 
 			port map(
-				clk => clk_1hz,
+				clk => clk_5khz,
 				rst => rst,
 				soc=> igpio1_adc_out(0),
 				eoc => igpio1_adc_in(1),
@@ -214,9 +213,9 @@ begin
 			port map(
 				clk => clk_2mhz,
 				rst => rst,
-				divisor => x"00000001",
-				ld_divisor => '0',
-				done_divisor => done_div,
+				divisor => igpio2_pwm0_prescaler,
+				ld_divisor => igpio2_pwm0_main_out(0),
+				done_divisor => igpio2_pwm0_main_in(1),
 				duty => igpio2_pwm0_main_out(13 downto 4),
 				ld_duty => igpio2_pwm0_main_out(2),
 				done_duty => igpio2_pwm0_main_in(3),
@@ -227,9 +226,9 @@ begin
 			port map(
 				clk => clk_2mhz,
 				rst => rst,
-				divisor => x"00000001",
-				ld_divisor => '0',
-				done_divisor => done_div,
+				divisor => igpio2_pwm1_prescaler,
+				ld_divisor => igpio2_pwm1_main_out(0),
+				done_divisor => igpio2_pwm1_main_in(1),
 				duty => igpio2_pwm1_main_out(13 downto 4),
 				ld_duty => igpio2_pwm1_main_out(2),
 				done_duty => igpio2_pwm1_main_in(3),
@@ -248,9 +247,36 @@ begin
 			);
 	
 	
+	
 	rst <= not rst_n;
 	gpio0 <= not igpio0;
 	
+	
+	-----------------------------------------------------------------------
+	-------------------------- GPIO ASSIGN --------------------------------
+	-----------------------------------------------------------------------
+	--
+	--	We need this because otherwise would not be possible to read written 
+	-- value from the NIOS core. It's a loopback, in order to avoid to have
+	-- the read port (gpio_in) with not assigned inputs.
+	--
+	-----------------------------------------------------------------------
+	igpio1_adc_in(0) <= igpio1_adc_out(0);
+	
+	igpio3_rdport_in(19 downto 9) <= igpio3_rdport_out(19 downto 9);
+	
+	igpio2_pwm0_main_in(0) <= igpio2_pwm0_main_out(0);
+	igpio2_pwm0_main_in(2) <= igpio2_pwm0_main_out(2);
+	igpio2_pwm0_main_in(13 downto 4) <= igpio2_pwm0_main_out(13 downto 4);
+
+	igpio2_pwm1_main_in(0) <= igpio2_pwm1_main_out(0);
+	igpio2_pwm1_main_in(2) <= igpio2_pwm1_main_out(2);
+	igpio2_pwm1_main_in(13 downto 4) <= igpio2_pwm1_main_out(13 downto 4);
+	
+	
+	-----------------------------------------------------------------------
+	-------------------------- RANDOM STUFF -------------------------------
+	-----------------------------------------------------------------------
 	next_cnt <= (others => '0') when (unsigned(curr_cnt) = 1) else
 					std_logic_vector(unsigned(curr_cnt) + 1);
 	
@@ -266,5 +292,5 @@ begin
 		end if;
 	
 	end process;
-
+	
 end mixture;

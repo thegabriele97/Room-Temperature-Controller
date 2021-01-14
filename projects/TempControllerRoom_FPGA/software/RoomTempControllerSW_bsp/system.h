@@ -4,7 +4,7 @@
  * Machine generated for CPU 'core0' in SOPC Builder design 'soc'
  * SOPC Builder design path: C:/Users/gabri/OneDrive/Desktop/EFES_Project/projects/TempControllerRoom_FPGA/soc.sopcinfo
  *
- * Generated: Mon Dec 28 14:57:36 CET 2020
+ * Generated: Thu Jan 14 12:20:56 CET 2021
  */
 
 /*
@@ -381,8 +381,8 @@
 #define GPIO_3_MEM_WRITEPORT_EDGE_TYPE "NONE"
 #define GPIO_3_MEM_WRITEPORT_FREQ 50000000
 #define GPIO_3_MEM_WRITEPORT_HAS_IN 0
-#define GPIO_3_MEM_WRITEPORT_HAS_OUT 1
-#define GPIO_3_MEM_WRITEPORT_HAS_TRI 0
+#define GPIO_3_MEM_WRITEPORT_HAS_OUT 0
+#define GPIO_3_MEM_WRITEPORT_HAS_TRI 1
 #define GPIO_3_MEM_WRITEPORT_IRQ -1
 #define GPIO_3_MEM_WRITEPORT_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define GPIO_3_MEM_WRITEPORT_IRQ_TYPE "NONE"

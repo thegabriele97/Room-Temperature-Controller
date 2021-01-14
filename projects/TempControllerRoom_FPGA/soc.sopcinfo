@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="soc" kind="soc" version="1.0" fabric="QSYS">
  <!-- Format version 20.1 720 (Future versions may contain additional information.) -->
- <!-- 2020.12.28.14:51:45 -->
+ <!-- 2021.01.14.12:16:53 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1609163504</value>
+  <value>1610623013</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -11399,11 +11399,11 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_OUT</name>
-   <value>1</value>
+   <value>0</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.HAS_TRI</name>
-   <value>0</value>
+   <value>1</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.IRQ_TYPE</name>
@@ -11457,13 +11457,13 @@ the requested settings for a module instance. -->
    <type>boolean</type>
    <value>false</value>
    <derived>false</derived>
-   <enabled>false</enabled>
+   <enabled>true</enabled>
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
   <parameter name="direction">
    <type>java.lang.String</type>
-   <value>Output</value>
+   <value>Bidir</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -11481,7 +11481,7 @@ the requested settings for a module instance. -->
    <type>boolean</type>
    <value>false</value>
    <derived>false</derived>
-   <enabled>false</enabled>
+   <enabled>true</enabled>
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
@@ -11505,7 +11505,7 @@ the requested settings for a module instance. -->
    <type>boolean</type>
    <value>false</value>
    <derived>false</derived>
-   <enabled>false</enabled>
+   <enabled>true</enabled>
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
@@ -11537,7 +11537,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_has_tri">
    <type>boolean</type>
-   <value>false</value>
+   <value>true</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -11545,7 +11545,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_has_out">
    <type>boolean</type>
-   <value>true</value>
+   <value>false</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -12125,8 +12125,8 @@ parameters are a RESULT of the module parameters. -->
    <type>conduit</type>
    <isStart>false</isStart>
    <port>
-    <name>out_port</name>
-    <direction>Output</direction>
+    <name>bidir_port</name>
+    <direction>Bidir</direction>
     <width>20</width>
     <role>export</role>
    </port>

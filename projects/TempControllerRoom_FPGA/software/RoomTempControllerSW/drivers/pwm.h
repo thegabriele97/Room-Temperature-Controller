@@ -27,7 +27,9 @@ typedef struct {
 		int gpio_direction;
 	} *pwm_config;
 
-	int *pwm_prescaler;
+	struct {
+		int value;
+	} *pwm_prescaler;
 } pwm_t;
 
 pwm_t pwm_init(int *pwm_main_base_addr, int *pwm_prescaler_base_addr);

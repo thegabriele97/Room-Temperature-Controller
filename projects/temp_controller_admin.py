@@ -253,7 +253,7 @@ def openHistoryWindow():
 
         for i in range(0, hsen[5]):
 
-            value = float("{:.2f}".format(int(hsen[6 + i] & 0x7f) * 400.0 / 128.0 / 10.0))
+            value = float("{:.1f}".format(int(hsen[6 + i] & 0x7f) * 400.0 / 128.0 / 10.0))
             is_temp = ((hsen[6 + i] & 0x80) >> 7 == 0)
             if not is_temp:
                 data["Record " + str(row_cnt)]["Average"] = value
@@ -500,10 +500,13 @@ def animate(i):
         gabriuart_send("LIVE", 0, [])
         temp_read_cnt = 0
 
-    animate_th("", i)
+    try:
+        animate_th("", i)
+    except:
+        pass
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1, sticky=NSEW)
-ani = animation.FuncAnimation(fig, animate, interval=(curr_sampling_period / 4), blit=False)
+ani = animation.FuncAnimation(fig, animate, interval=(curr_sampling_period / 8), blit=False)
 
 root.mainloop()

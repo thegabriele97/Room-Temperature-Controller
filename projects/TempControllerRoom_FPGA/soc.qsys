@@ -687,7 +687,7 @@
   <parameter name="bitModifyingOutReg" value="true" />
   <parameter name="captureEdge" value="false" />
   <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Output" />
+  <parameter name="direction" value="Bidir" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
   <parameter name="irqType" value="LEVEL" />

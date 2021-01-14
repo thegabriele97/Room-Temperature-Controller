@@ -7,8 +7,9 @@ historymem_t historymem_init(int *gpio_wrport_addr, int *gpio_rdport_addr) {
 	mem.write_port = gpio_wrport_addr;
 	mem.read_port = gpio_rdport_addr;
 
+	mem.write_port->gpio_direction.reg = 0xfffff;
 	mem.read_port->gpio_direction.fields.rdaddr = 0x7ff;
-	mem.read_port->gpio_direction.fields.rddata = 0x000;
+	mem.read_port->gpio_direction.fields.rddata = 0x00;
 
 	return mem;
 }

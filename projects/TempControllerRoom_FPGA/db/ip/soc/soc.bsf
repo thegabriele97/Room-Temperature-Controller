@@ -123,13 +123,6 @@ https://fpgasoftware.intel.com/eula.
 		(line (pt 0 472)(pt 304 472)(line_width 3))
 	)
 	(port
-		(pt 0 512)
-		(output)
-		(text "gpio_3_mem_writeport_external_connection_export[19..0]" (rect 0 0 230 12)(font "Arial" (font_size 8)))
-		(text "gpio_3_mem_writeport_external_connection_export[19..0]" (rect 4 501 328 512)(font "Arial" (font_size 8)))
-		(line (pt 0 512)(pt 304 512)(line_width 3))
-	)
-	(port
 		(pt 720 72)
 		(output)
 		(text "pll_2mhz_clk" (rect 0 0 50 12)(font "Arial" (font_size 8)))
@@ -219,6 +212,13 @@ https://fpgasoftware.intel.com/eula.
 		(text "gpio_0_external_connection_export[3..0]" (rect 0 0 160 12)(font "Arial" (font_size 8)))
 		(text "gpio_0_external_connection_export[3..0]" (rect 4 157 238 168)(font "Arial" (font_size 8)))
 		(line (pt 0 168)(pt 304 168)(line_width 3))
+	)
+	(port
+		(pt 0 512)
+		(bidir)
+		(text "gpio_3_mem_writeport_external_connection_export[19..0]" (rect 0 0 230 12)(font "Arial" (font_size 8)))
+		(text "gpio_3_mem_writeport_external_connection_export[19..0]" (rect 4 501 328 512)(font "Arial" (font_size 8)))
+		(line (pt 0 512)(pt 304 512)(line_width 3))
 	)
 	(port
 		(pt 0 632)

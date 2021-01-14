@@ -22,7 +22,7 @@ entity soc is
 		gpio_2_pwm1_prescaler_external_connection_export : out   std_logic_vector(31 downto 0);                    -- gpio_2_pwm1_prescaler_external_connection.export
 		gpio_3_mem_readport_external_connection_in_port  : in    std_logic_vector(19 downto 0) := (others => '0'); --   gpio_3_mem_readport_external_connection.in_port
 		gpio_3_mem_readport_external_connection_out_port : out   std_logic_vector(19 downto 0);                    --                                          .out_port
-		gpio_3_mem_writeport_external_connection_export  : out   std_logic_vector(19 downto 0);                    --  gpio_3_mem_writeport_external_connection.export
+		gpio_3_mem_writeport_external_connection_export  : inout std_logic_vector(19 downto 0) := (others => '0'); --  gpio_3_mem_writeport_external_connection.export
 		pll_2mhz_clk                                     : out   std_logic;                                        --                                  pll_2mhz.clk
 		pll_5khz_clk                                     : out   std_logic;                                        --                                  pll_5khz.clk
 		sdram_clk_clk                                    : out   std_logic;                                        --                                 sdram_clk.clk
@@ -171,14 +171,14 @@ architecture rtl of soc is
 
 	component soc_gpio_3_mem_writeport is
 		port (
-			clk        : in  std_logic                     := 'X';             -- clk
-			reset_n    : in  std_logic                     := 'X';             -- reset_n
-			address    : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- address
-			write_n    : in  std_logic                     := 'X';             -- write_n
-			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
-			chipselect : in  std_logic                     := 'X';             -- chipselect
-			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
-			out_port   : out std_logic_vector(19 downto 0)                     -- export
+			clk        : in    std_logic                     := 'X';             -- clk
+			reset_n    : in    std_logic                     := 'X';             -- reset_n
+			address    : in    std_logic_vector(2 downto 0)  := (others => 'X'); -- address
+			write_n    : in    std_logic                     := 'X';             -- write_n
+			writedata  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			chipselect : in    std_logic                     := 'X';             -- chipselect
+			readdata   : out   std_logic_vector(31 downto 0);                    -- readdata
+			bidir_port : inout std_logic_vector(19 downto 0) := (others => 'X')  -- export
 		);
 	end component soc_gpio_3_mem_writeport;
 
@@ -662,7 +662,7 @@ begin
 			writedata  => mm_interconnect_0_gpio_3_mem_writeport_s1_writedata,       --                    .writedata
 			chipselect => mm_interconnect_0_gpio_3_mem_writeport_s1_chipselect,      --                    .chipselect
 			readdata   => mm_interconnect_0_gpio_3_mem_writeport_s1_readdata,        --                    .readdata
-			out_port   => gpio_3_mem_writeport_external_connection_export            -- external_connection.export
+			bidir_port => gpio_3_mem_writeport_external_connection_export            -- external_connection.export
 		);
 
 	sdram_controller_0 : component soc_sdram_controller_0
