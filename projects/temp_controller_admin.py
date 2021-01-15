@@ -11,6 +11,7 @@ import os
 from subprocess import Popen, PIPE
 import _thread as thread
 from tkintertable import TableCanvas, TableModel
+import time
 
 curr_avg_count = 4
 curr_sampling_period = 1000;
@@ -57,8 +58,13 @@ def send_ping():
 
 def wait_ack():
 
+    time.sleep(0.4)
+    if not ser.in_waiting > 0:
+        raise Exception("After 0.4 s, not ACK nor NACK available")
+    
     while 1:
         ack = ser.read_until()
+
         if b'\x02' in ack and not (b'CURR' in ack or b'CAVG' in ack or b'PONG' in ack):
             print(ack)
             if not b'\x06' in ack:
@@ -126,7 +132,7 @@ def get_btn_handler():
     curr_sampling_period = reconstruct_int32(csen, 9)
 
     th0.delete(0, END)
-    th0.insert(0, csen[11] * 400 / 128 / 10);
+    th0.insert(0, "{:.1f}".format(csen[11] * 400 / 128 / 10))
     global line3
     line3.remove()
     line3 = create_line_th0(plt, float(th0.get()))
@@ -138,7 +144,7 @@ def get_btn_handler():
     m1_th0.insert(0, reconstruct_int16(csen, 15))
 
     th1.delete(0, END)
-    th1.insert(0, csen[16] * 400 / 128 / 10);
+    th1.insert(0, "{:.1f}".format(csen[16] * 400 / 128 / 10))
     global line4
     line4.remove()
     line4 = create_line_th1(plt, float(th1.get()))
@@ -150,7 +156,7 @@ def get_btn_handler():
     m1_th1.insert(0, reconstruct_int16(csen, 20))
 
     th2.delete(0, END)
-    th2.insert(0, csen[21] * 400 / 128 / 10);
+    th2.insert(0, "{:.1f}".format(csen[21] * 400 / 128 / 10))
     global line5
     line5.remove()  
     line5 = create_line_th2(plt, float(th2.get()))
@@ -165,13 +171,13 @@ def get_btn_handler():
 def set_btn_handler():
     sample_freq = int(sample_freq_entry.get())
     avg_cnt = int(avg_entry.get())
-    th0_val = int(float(th0.get()) * 10 * 128 / 400)
+    th0_val = int(float("{:.1f}".format(float(th0.get()))) * 10 * 128 / 400)
     th0_m0 = int(m0_th0.get())
     th0_m1 = int(m1_th0.get())
-    th1_val = int(float(th1.get()) * 10 * 128 / 400)
+    th1_val = int(float("{:.1f}".format(float(th1.get()))) * 10 * 128 / 400)
     th1_m0 = int(m0_th1.get())
     th1_m1 = int(m1_th1.get())
-    th2_val = int(float(th2.get()) * 10 * 128 / 400)
+    th2_val = int(float("{:.1f}".format(float(th2.get()))) * 10 * 128 / 400)
     th2_m0 = int(m0_th2.get())
     th2_m1 = int(m1_th2.get())
 
@@ -213,6 +219,12 @@ def configure_serial():
     
     try:
         open_serial(serial_port_entry.get(), int(nbits.get()[0]), int(br_entry.get()))
+        time.sleep(0.1)     # wait fro 100 ms for pyserial port to actually be ready
+        ser.flushInput()    # flushing the input buffer
+        ser.flushOutput()   # flushing the output buffer
+        while(ser.in_waiting > 0):
+            pass
+
         send_ping()
         get_btn_handler()
 
@@ -445,6 +457,9 @@ def animate_th(th_name, i):
     global temp_read_cnt
 
     print("So.. ", end='')
+    if not ser.in_waiting > 0:
+        return
+    
     temp = ser.read_until()
     print(temp)
 
@@ -455,12 +470,16 @@ def animate_th(th_name, i):
     log.see("end")
     log.config(state=DISABLED)
 
-    """     checksum = gabriuart_checksum(reconstruct_int32(temp, 4))
-    for s_data in temp[5:(len(temp)-5)]:
+    checksum = gabriuart_checksum(cmd2_u32(temp[1:5].decode('ascii')))
+    for s_data in temp[6:6+temp[5]]:
         checksum += gabriuart_checksum(s_data)
 
-    checksum &= 0x7f 
-    """
+    checksum &= 0x7f
+    if checksum != temp[len(temp)-4]:
+        return
+    elif (temp_read_cnt > 10):
+        gabriuart_send("LIVE", 0, [])
+        temp_read_cnt = 0
 
     if b"CURR" in temp:
         temp_read_cnt += 1
@@ -496,17 +515,14 @@ def animate(i):
     #t1 = thread.start_new_thread(animate_th, ("thread_animate", i))
     #t1.wait()
 
-    if (temp_read_cnt > 1):
-        gabriuart_send("LIVE", 0, [])
-        temp_read_cnt = 0
-
     try:
         animate_th("", i)
-    except:
+    except Exception as e:
+        print(e)
         pass
 
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1, sticky=NSEW)
-ani = animation.FuncAnimation(fig, animate, interval=(curr_sampling_period / 8), blit=False)
+ani = animation.FuncAnimation(fig, animate, interval=20, blit=False)
 
 root.mainloop()

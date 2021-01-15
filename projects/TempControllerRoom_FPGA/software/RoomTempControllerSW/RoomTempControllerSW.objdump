@@ -2389,7 +2389,7 @@ void _ISR_uart0(void *context, alt_u32 id) {
 
 		if (is_check_ok) {
  40012e4:	e0bffb17 	ldw	r2,-20(fp)
- 40012e8:	1001e226 	beq	r2,zero,4001a74 <_ISR_uart0+0x970>
+ 40012e8:	1001e326 	beq	r2,zero,4001a78 <_ISR_uart0+0x974>
 			i = gabriuart_cmd2_u32(buffer + 1);
  40012ec:	00810074 	movhi	r2,1025
  40012f0:	10912a44 	addi	r2,r2,17577
@@ -2403,25 +2403,25 @@ void _ISR_uart0(void *context, alt_u32 id) {
  400130c:	10c02d26 	beq	r2,r3,40013c4 <_ISR_uart0+0x2c0>
  4001310:	00d51174 	movhi	r3,21573
  4001314:	18d4d0c4 	addi	r3,r3,21315
- 4001318:	1881d716 	blt	r3,r2,4001a78 <_ISR_uart0+0x974>
+ 4001318:	1881d616 	blt	r3,r2,4001a74 <_ISR_uart0+0x970>
  400131c:	00d51174 	movhi	r3,21573
  4001320:	18d1d204 	addi	r3,r3,18248
  4001324:	10c18c26 	beq	r2,r3,4001958 <_ISR_uart0+0x854>
  4001328:	00d51174 	movhi	r3,21573
  400132c:	18d1d204 	addi	r3,r3,18248
- 4001330:	1881d116 	blt	r3,r2,4001a78 <_ISR_uart0+0x974>
+ 4001330:	1881d016 	blt	r3,r2,4001a74 <_ISR_uart0+0x970>
  4001334:	00d51174 	movhi	r3,21573
  4001338:	18d1d0c4 	addi	r3,r3,18243
  400133c:	10c0cf26 	beq	r2,r3,400167c <_ISR_uart0+0x578>
  4001340:	00d51174 	movhi	r3,21573
  4001344:	18d1d0c4 	addi	r3,r3,18243
- 4001348:	1881cb16 	blt	r3,r2,4001a78 <_ISR_uart0+0x974>
+ 4001348:	1881ca16 	blt	r3,r2,4001a74 <_ISR_uart0+0x970>
  400134c:	00d155b4 	movhi	r3,17750
  4001350:	18d25304 	addi	r3,r3,18764
  4001354:	10c1c526 	beq	r2,r3,4001a6c <_ISR_uart0+0x968>
  4001358:	00d1d3b4 	movhi	r3,18254
  400135c:	18d25404 	addi	r3,r3,18768
- 4001360:	10c1c51e 	bne	r2,r3,4001a78 <_ISR_uart0+0x974>
+ 4001360:	10c1c41e 	bne	r2,r3,4001a74 <_ISR_uart0+0x970>
 			case PING:
 				buffer[buffer_post] = ~buffer[i+6];
  4001364:	d0a2f817 	ldw	r2,-29728(gp)
@@ -2451,7 +2451,7 @@ void _ISR_uart0(void *context, alt_u32 id) {
 				lost_acks = 0; // A PING means that a client is connected, so I start again to sent data
  40013bc:	d022f615 	stw	zero,-29736(gp)
 				break;
- 40013c0:	0001ad06 	br	4001a78 <_ISR_uart0+0x974>
+ 40013c0:	0001ac06 	br	4001a74 <_ISR_uart0+0x970>
 
 			case CSET:
 				ptr = buffer + buffer_post - 22;
@@ -2668,7 +2668,7 @@ void _ISR_uart0(void *context, alt_u32 id) {
  4001674:	10d12915 	stw	r3,17572(r2)
 
 				break;
- 4001678:	0000ff06 	br	4001a78 <_ISR_uart0+0x974>
+ 4001678:	0000fe06 	br	4001a74 <_ISR_uart0+0x970>
 
 			case CGET:
 				i = buffer_post;
@@ -2882,7 +2882,7 @@ void _ISR_uart0(void *context, alt_u32 id) {
  400194c:	2109ae04 	addi	r4,r4,9912
  4001950:	4001ad40 	call	4001ad4 <gabriuart_send>
 				break;
- 4001954:	00004806 	br	4001a78 <_ISR_uart0+0x974>
+ 4001954:	00004706 	br	4001a74 <_ISR_uart0+0x970>
 
 			case HGET:
 
@@ -2975,17 +2975,19 @@ void _ISR_uart0(void *context, alt_u32 id) {
 				}
 
 				break;
- 4001a68:	00000306 	br	4001a78 <_ISR_uart0+0x974>
+ 4001a68:	00000206 	br	4001a74 <_ISR_uart0+0x970>
 
 			case LIVE:
 				// If a client sends this, it means that it's still alive. It has to send it periodically
 				lost_acks = 0;
  4001a6c:	d022f615 	stw	zero,-29736(gp)
 				break;
- 4001a70:	00000106 	br	4001a78 <_ISR_uart0+0x974>
+ 4001a70:	0001883a 	nop
 			}
+
+			lost_acks = 0;
+ 4001a74:	d022f615 	stw	zero,-29736(gp)
 		}
- 4001a74:	0001883a 	nop
 
 		buffer_post = 0;
  4001a78:	d022f705 	stb	zero,-29732(gp)
@@ -4383,7 +4385,7 @@ alt_u16 history0_addr_get_update() {
  4002e8c:	04003724 	muli	r16,zero,220
  4002e90:	04002ffc 	xorhi	r16,zero,191
  4002e94:	0400370c 	andi	r16,zero,220
- 4002e98:	040036c0 	call	40036c <__alt_mem_sdram_controller_0-0x3bffc94>
+ 4002e98:	040036c0 	call	40036c <__reset-0x3bffc94>
  4002e9c:	04002ffc 	xorhi	r16,zero,191
  4002ea0:	040036b4 	movhi	r16,218
  4002ea4:	04002fc4 	movi	r16,191
@@ -4437,12 +4439,12 @@ alt_u16 history0_addr_get_update() {
  4002f64:	04002ffc 	xorhi	r16,zero,191
  4002f68:	04002ffc 	xorhi	r16,zero,191
  4002f6c:	04003834 	movhi	r16,224
- 4002f70:	04003480 	call	400348 <__alt_mem_sdram_controller_0-0x3bffcb8>
+ 4002f70:	04003480 	call	400348 <__reset-0x3bffcb8>
  4002f74:	04003278 	rdprs	r16,zero,201
  4002f78:	04003278 	rdprs	r16,zero,201
  4002f7c:	04003278 	rdprs	r16,zero,201
  4002f80:	040034f4 	movhi	r16,211
- 4002f84:	04003480 	call	400348 <__alt_mem_sdram_controller_0-0x3bffcb8>
+ 4002f84:	04003480 	call	400348 <__reset-0x3bffcb8>
  4002f88:	04002ffc 	xorhi	r16,zero,191
  4002f8c:	04002ffc 	xorhi	r16,zero,191
  4002f90:	04003588 	cmpgei	r16,zero,214
@@ -4450,7 +4452,7 @@ alt_u16 history0_addr_get_update() {
  4002f98:	0400354c 	andi	r16,zero,213
  4002f9c:	040031b0 	cmpltui	r16,zero,198
  4002fa0:	0400350c 	andi	r16,zero,212
- 4002fa4:	04003500 	call	400350 <__alt_mem_sdram_controller_0-0x3bffcb0>
+ 4002fa4:	04003500 	call	400350 <__reset-0x3bffcb0>
  4002fa8:	04002ffc 	xorhi	r16,zero,191
  4002fac:	040037dc 	xori	r16,zero,223
  4002fb0:	04002ffc 	xorhi	r16,zero,191
@@ -10091,19 +10093,19 @@ alt_u16 history0_addr_get_update() {
  40086c4:	04008ea8 	cmpgeui	r16,zero,570
  40086c8:	04008e98 	cmpnei	r16,zero,570
  40086cc:	04008838 	rdprs	r16,zero,544
- 40086d0:	04008e80 	call	4008e8 <__alt_mem_sdram_controller_0-0x3bff718>
+ 40086d0:	04008e80 	call	4008e8 <__reset-0x3bff718>
  40086d4:	04008e34 	movhi	r16,568
  40086d8:	04008838 	rdprs	r16,zero,544
  40086dc:	04008e28 	cmpgeui	r16,zero,568
- 40086e0:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086e4:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086e8:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086ec:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086f0:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086f4:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086f8:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 40086fc:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
- 4008700:	04008800 	call	400880 <__alt_mem_sdram_controller_0-0x3bff780>
+ 40086e0:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086e4:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086e8:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086ec:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086f0:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086f4:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086f8:	04008800 	call	400880 <__reset-0x3bff780>
+ 40086fc:	04008800 	call	400880 <__reset-0x3bff780>
+ 4008700:	04008800 	call	400880 <__reset-0x3bff780>
  4008704:	04008838 	rdprs	r16,zero,544
  4008708:	04008838 	rdprs	r16,zero,544
  400870c:	04008838 	rdprs	r16,zero,544
@@ -12701,7 +12703,7 @@ alt_u16 history0_addr_get_update() {
  400ae84:	0400b184 	movi	r16,710
  400ae88:	0400af4c 	andi	r16,zero,701
  400ae8c:	0400af4c 	andi	r16,zero,701
- 400ae90:	0400b740 	call	400b74 <__alt_mem_sdram_controller_0-0x3bff48c>
+ 400ae90:	0400b740 	call	400b74 <__reset-0x3bff48c>
  400ae94:	0400af4c 	andi	r16,zero,701
  400ae98:	0400af4c 	andi	r16,zero,701
  400ae9c:	0400af4c 	andi	r16,zero,701
@@ -12717,7 +12719,7 @@ alt_u16 history0_addr_get_update() {
  400aec4:	0400af4c 	andi	r16,zero,701
  400aec8:	0400af4c 	andi	r16,zero,701
  400aecc:	0400af4c 	andi	r16,zero,701
- 400aed0:	0400b440 	call	400b44 <__alt_mem_sdram_controller_0-0x3bff4bc>
+ 400aed0:	0400b440 	call	400b44 <__reset-0x3bff4bc>
  400aed4:	0400b3cc 	andi	r16,zero,719
  400aed8:	0400af4c 	andi	r16,zero,701
  400aedc:	0400af4c 	andi	r16,zero,701
@@ -17003,7 +17005,7 @@ alt_u16 history0_addr_get_update() {
  400f02c:	3085883a 	add	r2,r6,r2
  400f030:	10bc0e17 	ldw	r2,-4040(r2)
  400f034:	1000683a 	jmp	r2
- 400f038:	0400f2c0 	call	400f2c <__alt_mem_sdram_controller_0-0x3bff0d4>
+ 400f038:	0400f2c0 	call	400f2c <__reset-0x3bff0d4>
  400f03c:	0400f0e4 	muli	r16,zero,963
  400f040:	0400f094 	movui	r16,962
  400f044:	0400f0f4 	movhi	r16,963

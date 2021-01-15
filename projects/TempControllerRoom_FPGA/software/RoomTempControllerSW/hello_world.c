@@ -299,6 +299,8 @@ void _ISR_uart0(void *context, alt_u32 id) {
 				lost_acks = 0;
 				break;
 			}
+
+			lost_acks = 0;
 		}
 
 		buffer_post = 0;
