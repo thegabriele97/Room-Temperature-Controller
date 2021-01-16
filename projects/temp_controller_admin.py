@@ -40,7 +40,7 @@ def send_ping():
     checksum = chr((gabriuart_checksum(cmd2_u32(cmd)) + gabriuart_checksum(data)) & 0x7f)
     bytes_arr = [ b'\x02', bytes(cmd, 'ascii'), b'\x01', b'\xaa', bytes(checksum, 'ascii'), b'\x03' ]
     
-    for i in range(1, 10):
+    for i in range(1, 2):
         for byte in bytes_arr:
             ser.write(byte)
 
@@ -57,6 +57,7 @@ def send_ping():
                     break
 
 def wait_ack():
+    time_tried = 0
 
     time.sleep(0.4)
     if not ser.in_waiting > 0:
@@ -64,6 +65,10 @@ def wait_ack():
     
     while 1:
         ack = ser.read_until()
+        time_tried += 1
+
+        if time_tried > 15:
+            raise Exception("After 0.4 s, not ACK nor NACK available")
 
         if b'\x02' in ack and not (b'CURR' in ack or b'CAVG' in ack or b'PONG' in ack):
             print(ack)
@@ -87,7 +92,8 @@ def gabriuart_send(cmd: str, length: int, data: list):
         ser.write(byte)
 
     if cmd != "LIVE":
-        wait_ack()
+        #wait_ack()
+        pass
 
 def reconstruct_int32(data: list, index: int):
     return data[index] << 24 | data[index-1] << 16 | data[index-2] << 8 | data[index-3]
@@ -97,12 +103,14 @@ def reconstruct_int16(data: list, index: int):
 
 def get_btn_handler():
     gabriuart_send("CGET", 0, [])
+    ntent = 0
 
     while 1:
         csen = bytes()
 
         while 1:
             csen += ser.readline()
+            ntent += 1
 
             try:
                 if (len(csen) == 6 + csen[5] + 2 + 2 or (b'\x06' in csen or b'\x0f' in csen)): #total length is 6 of STX, CMD, LEN + length of frame + checksum + ETX + \r\n
@@ -110,7 +118,7 @@ def get_btn_handler():
             except:
                     break
 
-            if len(csen) > 50:    # something bad happened.. trying again from 0
+            if len(csen) > 50 or ntent > 15:    # something bad happened.. trying again from 0
                 get_btn_handler()
                 return
 
@@ -486,23 +494,23 @@ def animate_th(th_name, i):
         temp = temp[6]
 
         yar.append(temp * 400.0 / 128.0 / 10.0)
-        xar.append(i)
+        xar.append(len(xar) + 1)
         line.set_data(xar, yar)
-        ax1.set_xlim(i-500, i+1)
+        ax1.set_xlim(len(xar) + 1-500, len(xar) + 1+1)
 
     elif b"CAVG" in temp:
         temp_read_cnt += 1
         temp = temp[9] << 24 | temp[8] << 16 | temp[7] << 8 | temp[6];
 
         yar2.append((float(temp) / curr_avg_count) * 400.0 / 128.0 / 10.0);
-        xar2.append(i)
+        xar2.append(len(xar) + 1)
         line2.set_data(xar2, yar2)
 
     for i, a in enumerate(ann_list):
         a.remove()
         ann_list[:] = []
 
-    ann = plt.annotate('%0.1f °C' % yar[-1], xy=(1, yar[-1]), xytext=(8, 0), xycoords=('axes fraction', 'data'), textcoords='offset points')
+    ann = plt.annotate('%0.1f °C' % yar2[-1], xy=(1, yar2[-1]), xytext=(8, 0), xycoords=('axes fraction', 'data'), textcoords='offset points')
     ann_list.append(ann)
 
 def animate(i):
