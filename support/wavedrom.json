@@ -1,0 +1,8 @@
+{signal: [
+  {name: 'clk', 	wave: 'P...|...|x'},
+  {name: 'wren', 	wave: '0.10|...|x'},
+  {name: 'wraddr', 	wave: 'z5.z|...|x', data: ["addr", "row 2", "row 1", "row 2"]},
+  {name: 'data', 	wave: 'x6.x|...|x', data: ["data", "data 2", "data 1", "data 2"]},
+  {name: 'rdaddr', 	wave: 'z...|7.z|x', data: ["addr", "col 2", "col 1", "col 2"]},
+  {name: 'q', 		wave: 'x...|.9x|x', data: ["data", "col 2", "col 1", "col 2"]},
+]}
